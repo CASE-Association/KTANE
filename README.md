@@ -32,7 +32,7 @@ All nodes (belonging to the same bomb ID) receive the same commands but only use
 
 
 ## Programming a bomb module
-New bomb modules are added in the MainBrain in `mainbrain/csharp/mainbrainUtils/Modules.cs`. Modules implement three methods:
+New bomb modules are added in the MainBrain in `mainbrain/csharp/mainbrainUtils/Modules.cs`. Modules inherit from `Module` and can implement three methods:
 - `List<OscMessage> Update(Bomb bomb)`: Called at regular intervals for blinking lights or other realtime updates.
 - `List<OscMessage> OnMessage(Bomb bomb, OscMessage msg)`: Called when a message is received from a node.
 - `List<OscMessage> Sync(Bomb bomb)`: Called when a bomb is started, a new node connects and at regular intervals. This should send all current state of the bomb, so that any desynced nodes can catch up.

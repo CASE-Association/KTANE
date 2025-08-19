@@ -54,7 +54,7 @@ public class Bomb
 
         foreach (var module in modules)
         {
-            var moduleMessages = module.OnMessage(message.Address.Value.ToString(), message.Arguments.FirstOrDefault());
+            var moduleMessages = module.OnMessage(this, message.Address.Value.ToString(), message.Arguments.FirstOrDefault());
             if (moduleMessages != null && moduleMessages.Count() > 0)
             {
                 ret.AddRange(moduleMessages);
@@ -67,11 +67,21 @@ public class Bomb
     }
 }
 
-interface BombModule
+public abstract class BombModule
 {
     //void Initialize(Random rng);
-    List<OscMessage> OnMessage(string address, object value);
-    List<OscMessage> Heartbeat();
+    public virtual List<OscMessage> OnMessage(Bomb bomb, string address, object value)
+    {
+        return null;
+    }
+    public virtual List<OscMessage> Update(Bomb bomb)
+    {
+        return null;
+    }
+    public virtual List<OscMessage> Sync(Bomb bomb)
+    {
+        return null;
+    }
 }
 
 

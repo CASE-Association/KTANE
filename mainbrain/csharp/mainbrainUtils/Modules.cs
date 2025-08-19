@@ -45,7 +45,7 @@ public class WordMaze : BombModule
         return maze[x * mazeSize * 4 + y * 4 + dir];
     }
 
-    public List<OscMessage> OnMessage(string address, object msg)
+    public List<OscMessage> OnMessage(Bomb bomb, string address, object msg)
     {
         if (defused) return new List<OscMessage>();
         List<OscMessage> ret = new List<OscMessage>();
@@ -126,7 +126,7 @@ public class WordMaze : BombModule
         return new OscMessage(new CoreOSC.Address("/wordmaze/display"), [msg]);
     }
 
-    public List<OscMessage> Heartbeat()
+    public List<OscMessage> Sync(Bomb bomb)
     {
         return new List<OscMessage>
         {
