@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36408.4 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mainbrainUtils", "mainbrainUtils.csproj", "{046AD5C8-EE64-0476-332A-742AB76FE614}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{046AD5C8-EE64-0476-332A-742AB76FE614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{046AD5C8-EE64-0476-332A-742AB76FE614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{046AD5C8-EE64-0476-332A-742AB76FE614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{046AD5C8-EE64-0476-332A-742AB76FE614}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E0AD7F2-9F24-475E-A9F1-5667CBE6CA21}
+	EndGlobalSection
+EndGlobal
