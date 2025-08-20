@@ -35,7 +35,7 @@ public class Bomb
 {
 
     BombState state;
-    List<BombModule> modules = new List<BombModule>();
+    public List<BombModule> modules = new List<BombModule>();
 
     public Bomb()
     {
@@ -101,7 +101,7 @@ public class BombConnectionManager
     UdpClient sender;
     Dictionary<IPAddress, int> ipToId = new Dictionary<IPAddress, int>();
     Dictionary<int, List<IPAddress>> idToIps = new Dictionary<int, List<IPAddress>>();
-    Dictionary<int, Bomb> idToBomb = new Dictionary<int, Bomb>();
+    public Dictionary<int, Bomb> idToBomb = new Dictionary<int, Bomb>();
 
     OscMessageConverter converter = new OscMessageConverter();
 
