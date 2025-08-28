@@ -39,7 +39,7 @@ public class Bomb
         Random rng = new(0);
         modules.Add(new WordMaze(rng));
         modules.Add(new Wires(rng));
-        // Initialize bomb state
+        modules.Add(new TheButton(rng));
     }
     
     List<OscMessage> messagequeue = [];
@@ -51,6 +51,14 @@ public class Bomb
         foreach (var module in modules)
         {
             module.OnMessage(this, message.Address.Value.ToString(), message.Arguments.FirstOrDefault());
+        }
+    }
+
+    public void Sync()
+    {
+        foreach(var module in modules)
+        {
+            module.Sync(this);
         }
     }
 
@@ -75,6 +83,7 @@ public class Bomb
         strikes++;
         if (strikes >= 3)
         {
+            // TODO
             Console.WriteLine("Bomb exploded!");
         }
     }
@@ -96,6 +105,7 @@ public abstract class BombModule
     public virtual void OnMessage(Bomb bomb, string address, object value) {}
     public virtual void Update(Bomb bomb) { }
     public virtual void Sync(Bomb bomb) { }
+    public bool defused = false;
 }
 
 
@@ -141,7 +151,12 @@ public class BombConnectionManager
 
             String address = msg.Address.Value.ToString();
 
-            Console.WriteLine($"Received message from {senderAddress}: {address} with arguments: {msg.Arguments.FirstOrDefault().ToString()}");
+            Console.Write($"Received message from {senderAddress}: {address} with arguments: [ ");
+            foreach(var arg in msg.Arguments)
+            {
+                Console.Write($"{arg} ");
+            };
+            Console.WriteLine("]");
 
             if (address == "/connect")
             {
@@ -162,7 +177,10 @@ public class BombConnectionManager
                     Console.WriteLine($"Module connected: BombID {id} from {senderAddress}");
                 }
 
-                value.Add(senderAddress);
+                if (!value.Contains(senderAddress))
+                {
+                    value.Add(senderAddress);
+                }
 
                 if (!idToBomb.ContainsKey(id))
                 {
@@ -172,6 +190,7 @@ public class BombConnectionManager
                     };
                     Console.WriteLine($"Bomb created: BombID {id}");
                 }
+                idToBomb[id].Sync();
             }
             else
             {
@@ -185,7 +204,29 @@ public class BombConnectionManager
             }
         }
 
-        foreach(var kvp in idToBomb)
+        // Regularly trigger full sync on all modules
+        // TODO reduce this
+        if (heartbeat > 0) 
+        {
+            heartbeat--;
+        }
+        else
+        {
+            heartbeat = 10 * 50 * 99999;
+            foreach (var kvp in idToBomb)
+            {
+                kvp.Value.Sync();
+            }
+            foreach (var kvp in idToIps)
+            {
+                foreach (IPAddress ip in kvp.Value)
+                {
+                    OscMessage h = new(new CoreOSC.Address("/heartbeat"));
+                }
+            }
+        }
+
+        foreach (var kvp in idToBomb) // "Game loop" + retreive messages from modules and transmit them to nodes
         {
             var messages = kvp.Value.Update(); 
             if (messages != null && messages.Count > 0)
@@ -199,22 +240,6 @@ public class BombConnectionManager
                         Console.WriteLine($"Sent message to {ip} for BombID {kvp.Key}: {retMessage.Address.Value}");
                     }
 
-                }
-            }
-        }
-
-        if (heartbeat > 0)
-        {
-            heartbeat--;
-        }
-        else
-        {
-            heartbeat = 10 * 50;
-            foreach(var kvp in idToIps)
-            {
-                foreach (IPAddress ip in kvp.Value)
-                {
-                    OscMessage h = new( new CoreOSC.Address("/heartbeat"));
                 }
             }
         }
