@@ -52,10 +52,9 @@ public class WordMaze : BombModule
         return maze[x * mazeSize * 4 + y * 4 + dir];
     }
 
-    public List<OscMessage> OnMessage(Bomb bomb, string address, object msg)
+    public override void OnMessage(Bomb bomb, string address, object msg)
     {
-        if (defused) return new List<OscMessage>();
-        List<OscMessage> ret = new List<OscMessage>();
+        if (defused) return;
         bool changed = false;
         if (address == "/wordmaze/left")
         {
@@ -107,15 +106,13 @@ public class WordMaze : BombModule
             defused = true;
         }
 
-        if (changed) ret.Add(DisplayMessage());
+        if (changed) bomb.QueueMessage(DisplayMessage());
 
         if (changed)
         {
             Console.WriteLine($"WordMaze: x={x}, y={y}, targetX={targetX}, targetY={targetY}, directionChoice={directionChoice}");
             Console.WriteLine($"{GetWord(x, y, directionChoice)}");
         }
-
-        return ret;
     }
 
     private OscMessage DisplayMessage()
@@ -133,17 +130,75 @@ public class WordMaze : BombModule
         return new OscMessage(new CoreOSC.Address("/wordmaze/display"), [msg]);
     }
 
-    public List<OscMessage> Sync(Bomb bomb)
+    public override void Sync(Bomb bomb)
     {
-        return new List<OscMessage>
-        {
-            DisplayMessage(),
-        };
+        bomb.QueueMessage(DisplayMessage());
     }
 }
 
 public class Wires : BombModule
 {
+    public Wire[] wires;
+
+    public bool defused = false;
+    public int correctAction = -1;
+
+    public string activatedRule = "";
+    string currentRuleset = "5wires";
+
+    public Wires(Random rng)
+    {
+        wires = new Wire[5];
+        for (int i = 0; i < wires.Length; i++)
+        {
+            wires[i] = (Wire)rng.Next(1, 5); // Randomly assign non-cut wires
+        }
+        ComputeNextAction();
+    }
+
+    public override void OnMessage(Bomb bomb, string address, object value)
+    {
+        if (address.StartsWith("/wires/cut/"))
+        {
+            int wireIndex = int.Parse(address.Split('/').Last());
+            if (wireIndex >= 0 && wireIndex < wires.Length)
+            {
+                wires[wireIndex] = Wire.Cut;
+                Console.WriteLine($"Wire {wireIndex} cut.");
+
+                if(correctAction >= 0 && !defused)
+                {
+                    int correctWire = correctAction % 5;
+                    if (wireIndex == correctWire)
+                    {
+                        Console.WriteLine($"Correct wire cut");
+                        if(correctAction >= (int)Op.CutAndStop)
+                        {
+                            defused = true;
+                            Console.WriteLine("Bomb defused!");
+                        }
+
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Wrong wire cut, expected {correctWire}");
+                        bomb.AddStrike();
+                    }
+                }else
+                {
+                    Console.WriteLine($"Wire {wireIndex} cut, but no action expected.");
+                    bomb.AddStrike();
+                }
+                ComputeNextAction();
+                if(correctAction == (int)Op.Stop)
+                {
+                    defused = true;
+                }
+            }
+        }
+    }
+
+
     public enum Wire
     {
         Cut,
@@ -156,7 +211,7 @@ public class Wires : BombModule
     enum Op
     {
         To5wires = -4,
-        To3wires2 = -3,
+        To3wiresWIP = -3,
         Skip = -1,
         Stop = -2,
         Wire1 = 0,
@@ -167,34 +222,34 @@ public class Wires : BombModule
         CutAndStop = 5
     }
 
-    public Wire[] wires;
-
-    public bool defused = false;
-    public int correctAction = -1;
-
-    public string activatedRule = "";
+    
 
     public void ComputeNextAction()
     {
-        currentRuleset = new string[]{"", "", "", "3wires", "4wires", "5wires"} [wires.Count(wire => wire != Wire.Cut)];
+        currentRuleset = new string[]{"stop", "stop", "stop", "3wires", "4wires", "5wires"} [wires.Count(wire => wire != Wire.Cut)];
+        if (currentRuleset == "stop")
+        {
+            defused = true;
+            correctAction = (int)Op.Stop;
+        }
         int instruction = 0;
         while (true)
         {
             Console.WriteLine($"Current ruleset: {currentRuleset}, instruction: {instruction}");
-            int res = (int)rulesets[currentRuleset][instruction].DynamicInvoke(wires);
-            if(res >= 0)
+            int action = (int)rulesets[currentRuleset][instruction].DynamicInvoke(wires);
+            if(action >= 0)
             {
-                correctAction = res;
+                correctAction = action;
                 activatedRule = currentRuleset + " rule " + instruction;
                 break;
             }
-            else if(res == (int)Op.To5wires)
+            else if(action == (int)Op.To5wires)
             {
                 currentRuleset = "5wires";
                 instruction = 0;
                 continue;
             }
-            else if(res == (int)Op.To3wires2)
+            else if(action == (int)Op.To3wiresWIP)
             {
                 instruction = 0;
                 currentRuleset = "3wireswip";
@@ -204,11 +259,10 @@ public class Wires : BombModule
         }
     }
 
-    string currentRuleset = "5wires";
-    Dictionary<string, List<Delegate>> rulesets = new Dictionary<string, List<Delegate>>()
+    Dictionary<string, List<Delegate>> rulesets = new()
     {
         { "3wires", new List<Delegate>{
-            (Wire[] wires) => wires[3] == Wire.Cut && wires[4] == Wire.Cut ? (int)Op.To3wires2 : (int)Op.Skip, // If the bottom two wires are cut, proceed to “3 wires WIP” ruleset.
+            (Wire[] wires) => wires[3] == Wire.Cut && wires[4] == Wire.Cut ? (int)Op.To3wiresWIP : (int)Op.Skip, // If the bottom two wires are cut, proceed to “3 wires WIP” ruleset.
             (Wire[] wires) => wires.Any(wire => wire == Wire.Black)? wires.IndexOf(wire => wire == Wire.Black) + (int)Op.CutAndStop : (int)Op.Skip, // If there is a Black wire, cut the top black wire and stop.
             () => (int)Op.Stop,
         }},
@@ -224,7 +278,7 @@ public class Wires : BombModule
             (Wire[] wires) => wires.Count(wire => wire == Wire.Red) > 1 ? GetNthUncutWire(wires, 4) : (int)Op.Skip, // If there is more than one red wire, cut the fourth wire.
             (Wire[] wires) => wires.Count(wire => wire != Wire.Cut) == 4 ? GetNthUncutWire(wires, 1) : (int)Op.Skip, // If there are exactly 4 uncut wires, cut the topmost wire.
             (Wire[] wires) => wires.Last() == Wire.Yellow || wires.Last() == Wire.Black ? GetNthUncutWire(wires, 2) : (int)Op.Skip, // If the last wire is Yellow or Black, cut the 2nd wire. // here we can use wires.Last() because we know there are 5 wires
-            (Wire[] wires) => wires.Count(wire => wire == Wire.Red) == 0 ? GetNthUncutWire(wires, 4) : (int)Op.Skip, // If there are no red wires, cut the fourth wire.
+            (Wire[] wires) => !wires.Any(wire => wire == Wire.Red) ? GetNthUncutWire(wires, 4) : (int)Op.Skip, // If there are no red wires, cut the fourth wire.
             (Wire[] wires) => GetNthUncutWire(wires, 3), // Otherwise, cut the middle wire.
         }},
         { "3wireswip", new List<Delegate>{
@@ -248,5 +302,94 @@ public class Wires : BombModule
             }
         }
         return -1; // Out of range!
+    }
+}
+
+public class TheButton: BombModule
+{
+    bool buttonState = false;
+    int[] lights = new int[8];
+
+    int stepA;
+
+    enum Mode
+    {
+        A,
+        B,
+        C
+    }
+
+    int[][] stepALights = new int[][]
+    {
+        new int[] { 6 }, // right "LEFT" light
+        new int[] { 1, 3 }, // two square lights
+        new int[] { 0 }, // Any of the 
+        new int[] { 4 }, //            two leftmost lights
+        new int[] { 7 }, // The only button without text or a shape
+        new int[] {  } // Otherwise
+    };
+
+    Mode[] stepAMode = new Mode[]
+    {
+        Mode.A,
+        Mode.C,
+        Mode.A,
+        Mode.A,
+        Mode.B,
+        Mode.C
+    };
+
+    TheButton(Random rng)
+    {
+        int stepA = rng.Next(0, 6);
+        for(int i = 0; i < stepA; i++)
+        {
+            for(int n = 0; n < stepALights[i].Length; n++)
+            {
+                lights[stepALights[i][n]] = -1; // -1 are lights that must not be lit
+            }
+        }
+        for (int n = 0; n < stepALights[stepA].Length; n++)
+        {
+            lights[stepALights[stepA][n]] = 1; // 1 are lights that must be lit
+        }
+        for (int i = 0; i < lights.Length; i++) // Fill the rest with random lights
+        {
+            if (lights[i] == 0)
+            {
+                lights[i] = rng.Next(0, 2);
+            }
+        }
+    }
+
+    public override void OnMessage(Bomb bomb, string address, object value)
+    {
+        if (address == "/button/press")
+        {
+            switch(stepAMode[stepA])
+            {
+                case Mode.A:
+                    break;
+                case Mode.B:
+                    break;
+                case Mode.C:
+                    break;
+            }
+        }
+    }
+
+    public override void Sync(Bomb bomb)
+    {
+        for(int i = 0; i < lights.Length; i++)
+        {
+            if (lights[i] == 1)
+            {
+                bomb.QueueMessage(new OscMessage(new CoreOSC.Address($"/button/light/{i}"), [true]));
+            }
+            else
+            {
+                bomb.QueueMessage(new OscMessage(new CoreOSC.Address($"/button/light/{i}"), [false]));
+            }
+        }
     }
 }

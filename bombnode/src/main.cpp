@@ -8,8 +8,8 @@
 
 const int BOMBID = 1337;
 
-const char* ssid = "CASELAB";
-const char* password = "CaseLocalNet";
+const char* ssid = "bombnet";
+const char* password = "sprangnollan";
 
 IPAddress localIp;
 
@@ -64,7 +64,7 @@ void setup() {
       msg.send(udp);
       udp.endPacket();
       msg.empty();
-      delay(10);
+      delay(20);
       if(udp.parsePacket() > 0){
         OSCMessage msgrecv;
         while (udp.available() > 0) {

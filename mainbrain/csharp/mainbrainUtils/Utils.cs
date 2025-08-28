@@ -4,6 +4,7 @@
 
 namespace Main;
 
+using CommunityToolkit.HighPerformance;
 using CoreOSC;
 using CoreOSC.IO;
 using CoreOSC.Types;
@@ -18,70 +19,83 @@ using VL.Core.Utils;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-public class BombState
-{
-    public BombState(int seed)
-    {
-        Random random = new Random(seed);
-
-        
-    }
-}
-
 
 public class OscMsgPack: Dictionary<string, IEnumerable<object>>;
 
 public class Bomb
 {
+    public BombConnectionManager connectionManager;
+    public List<BombModule> modules = [];
 
-    BombState state;
-    public List<BombModule> modules = new List<BombModule>();
+    private int strikes = 0;
+
+    public float secondsRemaining;
+
+    public bool running = true;
+    public bool defused = false;
 
     public Bomb()
     {
-        state = new BombState(0);
-
-        Random rng = new Random(0);
+        Random rng = new(0);
         modules.Add(new WordMaze(rng));
+        modules.Add(new Wires(rng));
         // Initialize bomb state
     }
     
+    List<OscMessage> messagequeue = [];
 
 
-    public List<OscMessage> OnMessage(OscMessage message)
+    public void OnMessage(OscMessage message)
     {
-        List<OscMessage> ret = new List<OscMessage>();
 
         foreach (var module in modules)
         {
-            var moduleMessages = module.OnMessage(this, message.Address.Value.ToString(), message.Arguments.FirstOrDefault());
-            if (moduleMessages != null && moduleMessages.Count() > 0)
-            {
-                ret.AddRange(moduleMessages);
-            }
+            module.OnMessage(this, message.Address.Value.ToString(), message.Arguments.FirstOrDefault());
         }
+    }
 
-        Console.WriteLine("Retcount" + ret.Count());
+    public List<OscMessage> Update()
+    {
+        if (messagequeue.Count > 0)
+        {
+            List<OscMessage> temp = new(messagequeue);
+            messagequeue.Clear();
+            return temp;
+        }
+        return null;
+    }
 
-        return ret;
+    public void QueueMessage(OscMessage message)
+    {
+        messagequeue.Add(message);
+    }
+
+    public void AddStrike()
+    {
+        strikes++;
+        if (strikes >= 3)
+        {
+            Console.WriteLine("Bomb exploded!");
+        }
+    }
+
+    public int[] GetTimeDigits()
+    {
+        return new int[] {
+            (int)(secondsRemaining / 600) % 10,
+            (int)(secondsRemaining / 60) % 10,
+            (int)(secondsRemaining / 10) % 10,
+            (int)(secondsRemaining) % 10
+        };
     }
 }
 
 public abstract class BombModule
 {
     //void Initialize(Random rng);
-    public virtual List<OscMessage> OnMessage(Bomb bomb, string address, object value)
-    {
-        return null;
-    }
-    public virtual List<OscMessage> Update(Bomb bomb)
-    {
-        return null;
-    }
-    public virtual List<OscMessage> Sync(Bomb bomb)
-    {
-        return null;
-    }
+    public virtual void OnMessage(Bomb bomb, string address, object value) {}
+    public virtual void Update(Bomb bomb) { }
+    public virtual void Sync(Bomb bomb) { }
 }
 
 
@@ -99,13 +113,13 @@ public class BombConnectionManager
 {
     UdpClient receiver;
     UdpClient sender;
-    Dictionary<IPAddress, int> ipToId = new Dictionary<IPAddress, int>();
-    Dictionary<int, List<IPAddress>> idToIps = new Dictionary<int, List<IPAddress>>();
-    public Dictionary<int, Bomb> idToBomb = new Dictionary<int, Bomb>();
+    Dictionary<IPAddress, int> ipToId = [];
+    Dictionary<int, List<IPAddress>> idToIps = [];
+    public Dictionary<int, Bomb> idToBomb = [];
 
-    OscMessageConverter converter = new OscMessageConverter();
+    OscMessageConverter converter = new();
 
-    IPEndPoint any = new IPEndPoint(IPAddress.Any, 4444);
+    IPEndPoint any = new(IPAddress.Any, 4444);
 
     int heartbeat = 0;
 
@@ -116,9 +130,8 @@ public class BombConnectionManager
     }
 
 
-    public async void Update() // Called by VVVV
+    public void Update() // Called by VVVV
     {
-        List<OscMessage> receivedMessages = new List<OscMessage>();
         while (receiver.Available > 0)
         {
             IPEndPoint senderEndpoint = new IPEndPoint(IPAddress.Any, 4500);
@@ -141,44 +154,51 @@ public class BombConnectionManager
                 int id = (int)msg.Arguments.ElementAt(1);
 
                 ipToId[senderAddress] = id;
-                if (!idToIps.ContainsKey(id))
+                if (!idToIps.TryGetValue(id, out List<IPAddress>? value))
                 {
-                    idToIps[id] = new List<IPAddress>();
+                    value = new List<IPAddress>();
+                    idToIps[id] = value;
 
                     Console.WriteLine($"Module connected: BombID {id} from {senderAddress}");
                 }
 
-                idToIps[id].Add(senderAddress);
+                value.Add(senderAddress);
 
                 if (!idToBomb.ContainsKey(id))
                 {
-                    idToBomb[id] = new Bomb();
+                    idToBomb[id] = new Bomb
+                    {
+                        connectionManager = this
+                    };
                     Console.WriteLine($"Bomb created: BombID {id}");
                 }
             }
             else
             {
-                if (ipToId.ContainsKey(senderAddress))
+                if (ipToId.TryGetValue(senderAddress, out int id))
                 {
-                    int id = ipToId[senderAddress];
-                    if (idToBomb.ContainsKey(id))
+                    if (idToBomb.TryGetValue(id, out Bomb? value))
                     {
-                        Bomb bomb = idToBomb[id];
-                        List<OscMessage> ret = bomb.OnMessage(msg);
-                        if (ret != null && ret.Count > 0)
-                        {
-                            foreach (OscMessage retMessage in ret)
-                            {
-                                var bytes = OscToBytes(retMessage);
-                                foreach (IPAddress ip in idToIps[id])
-                                {
-                                    sender.Send(bytes, new IPEndPoint(ip, 5000));
-                                    Console.WriteLine($"Sent response to {ip} for BombID {id}: {retMessage.Address.Value}");
-                                }
-
-                            }
-                        }
+                        value.OnMessage(msg);   
                     }
+                }
+            }
+        }
+
+        foreach(var kvp in idToBomb)
+        {
+            var messages = kvp.Value.Update(); 
+            if (messages != null && messages.Count > 0)
+            {
+                foreach (OscMessage retMessage in messages)
+                {
+                    var bytes = OscToBytes(retMessage);
+                    foreach (IPAddress ip in idToIps[kvp.Key])
+                    {
+                        sender.Send(bytes, new IPEndPoint(ip, 5000));
+                        Console.WriteLine($"Sent message to {ip} for BombID {kvp.Key}: {retMessage.Address.Value}");
+                    }
+
                 }
             }
         }
@@ -194,7 +214,7 @@ public class BombConnectionManager
             {
                 foreach (IPAddress ip in kvp.Value)
                 {
-                    OscMessage h = new OscMessage( new CoreOSC.Address("/heartbeat"));
+                    OscMessage h = new( new CoreOSC.Address("/heartbeat"));
                 }
             }
         }
@@ -203,27 +223,27 @@ public class BombConnectionManager
     private byte[] OscToBytes(OscMessage message)
     {
         var dwords = converter.Serialize(message);
-        var responseData = DwordsToBytes(dwords, out IEnumerable<byte> value);
-        return value.ToArray();
+        DwordsToBytes(dwords, out IEnumerable<byte> value);
+        return [.. value];
     }
 
-    private IEnumerable<DWord> BytesToDwords(IEnumerable<byte> value)
+    private static IEnumerable<DWord> BytesToDwords(IEnumerable<byte> value)
     {
         if (!value.Any())
         {
-            return new DWord[0];
+            return [];
         }
 
         var next = value.Take(4);
-        var dWord = new DWord(next.ToArray());
+        var dWord = new DWord([.. next]);
         return new[] { dWord }.Concat(BytesToDwords(value.Skip(4)));
     }
 
-    public IEnumerable<DWord> DwordsToBytes(IEnumerable<DWord> dWords, out IEnumerable<byte> value)
+    public static IEnumerable<DWord> DwordsToBytes(IEnumerable<DWord> dWords, out IEnumerable<byte> value)
     {
         if (!dWords.Any())
         {
-            value = new byte[0];
+            value = [];
             return dWords;
         }
         var next = dWords.First().Bytes;
