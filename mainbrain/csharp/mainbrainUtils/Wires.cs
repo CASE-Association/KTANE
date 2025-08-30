@@ -28,9 +28,9 @@ public class Wires : BombModule
 
     public override void OnMessage(Bomb bomb, string address, object value)
     {
-        if (address.StartsWith("/wires/cut/"))
+        if (address.StartsWith("/wires/cut"))
         {
-            int wireIndex = int.Parse(address.Split('/').Last());
+            int wireIndex = (int)value;
             if (wireIndex >= 0 && wireIndex < wires.Length)
             {
                 wires[wireIndex] = Wire.Cut;
@@ -154,7 +154,10 @@ public class Wires : BombModule
         }},
         { "3wireswip", new List<Delegate>{
             (Wire[] wires) => wires[GetNthUncutWire(wires, 3)] == Wire.Blue ? GetNthUncutWire(wires, 1) + (int)Op.CutAndStop : (int)Op.Skip, // If the last wire is blue, cut the top wire and stop. getnth is required because wires.last() might be a cut wire
-            () => (int)Op.Stop, // Otherwise, stop.
+            (Wire[] wires) => (int)Op.Stop, // Otherwise, stop.
+        }},
+        { "stop", new List<Delegate>{
+            (Wire[] wires) => (int)Op.Stop
         }},
     };
 

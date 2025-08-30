@@ -9,15 +9,15 @@ namespace Main;
 
 public class WordMaze : BombModule
 {
-    int x;
-    int y;
+    public int x;
+    public int y;
 
-    int targetX;
-    int targetY;
+    public int targetX;
+    public int targetY;
 
     int directionChoice = 0;
 
-    int mazeSize = 4;
+    public int mazeSize = 4;
 
     string[] maze;
 
@@ -95,7 +95,7 @@ public class WordMaze : BombModule
             defused = true;
         }
 
-        if (changed) bomb.QueueMessage(DisplayMessage());
+        if (changed) bomb.QueueMessage(DisplayMessage(bomb));
 
         if (changed)
         {
@@ -104,12 +104,23 @@ public class WordMaze : BombModule
         }
     }
 
+    int lastStrikes = -1;
+
+    public override void Update(Bomb bomb)
+    {
+        if (bomb.strikes != lastStrikes)
+        {
+            lastStrikes = bomb.strikes;
+            Sync(bomb);
+        }
+    }
+
     private string FixString(string s)
     {
         return s.Replace('å', '(').Replace('ä', '{').Replace('ö', '[');
     }
 
-    private OscMessage DisplayMessage()
+    private OscMessage DisplayMessage(Bomb bomb)
     {
         // å (
         // ä {
@@ -118,15 +129,29 @@ public class WordMaze : BombModule
         string line2;
         if (defused)
         {
-            line1 = "DEFUSED DEFUSED";
-            line2 = "DEFUSED DEFUSED";
+            line1 = "";
+            line2 = "MODULE DEFUSED";
         }
         else
         {
-            line1 = "TARGET: " + ("ABCDEFG"[targetX]) + (targetY + 1);
+            line1 = ("TARGET: " + ("ABCDEFG"[targetX]) + (targetY + 1));
+            
             string word = GetWord(x, y, directionChoice);
             word.PadLeft((16 - word.Length) / 2 + word.Length);
-            line2 = GetWord(x, y, directionChoice);
+            line2 = word;
+        }
+
+        line1 = line1.PadRight(13);
+        for (int i = 0; i < 3; i++)
+        {
+            if (i < bomb.strikes)
+            {
+                line1 += "X";
+            }
+            else
+            {
+                line1 += ".";
+            }
         }
 
         return new OscMessage(new CoreOSC.Address("/wordmaze/display"), [FixString(line1), FixString(line2)]);
@@ -134,7 +159,7 @@ public class WordMaze : BombModule
 
     public override void Sync(Bomb bomb)
     {
-        bomb.QueueMessage(DisplayMessage());
+        bomb.QueueMessage(DisplayMessage(bomb));
     }
 }
 
