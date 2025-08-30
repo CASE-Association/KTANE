@@ -3,6 +3,7 @@ using Main;
 using Stride.Core.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,9 @@ namespace Main;
 
 public class TheButton : BombModule
 {
-    int[] lights = new int[8];
+    public int[] lights = new int[8];
 
-    int stepA;
+    public int stepA;
 
     enum Mode
     {
@@ -22,15 +23,15 @@ public class TheButton : BombModule
         C
     }
 
-    int[][] stepALights = new int[][]
-    {
+    int[][] stepALights =
+    [
         new int[] { 6 }, // right "LEFT" light
         new int[] { 1, 3 }, // two square lights
         new int[] { 0 }, // Any of the 
         new int[] { 4 }, //            two leftmost lights
         new int[] { 7 }, // The only button without text or a shape
         new int[] {  } // Otherwise
-    };
+    ];
 
     Mode[] stepAMode = new Mode[]
     {
@@ -44,7 +45,7 @@ public class TheButton : BombModule
 
     public TheButton(Random rng)
     {
-        int stepA = rng.Next(0, 6);
+        stepA = rng.Next(0, 6);
         for (int i = 0; i < stepA; i++) // Disable lights for steps up to the chosen one
         {
             for (int n = 0; n < stepALights[i].Length; n++)
@@ -71,13 +72,15 @@ public class TheButton : BombModule
     public override void OnMessage(Bomb bomb, string address, object value)
     {
         if (address == "/button"){
-            if ((bool)value)
+            if (value is OscTrue)
             {
                 switch (stepAMode[stepA]) // Button pressed
                 {
                     case Mode.A:
+                        Debug.WriteLine("AA");
                         break;
                     case Mode.B:
+                        Debug.WriteLine("bb");
                         if (bomb.GetTimeDigits().Any(d => d == 5))
                         {
                             defused = true;
@@ -97,9 +100,12 @@ public class TheButton : BombModule
                 {
                     case Mode.A:
                     case Mode.C:
+                        Debug.WriteLine("AC");
                         if (lights[5] == 1)
                         {
-                            if(bomb.secondsRemaining % 2 == 0)
+                            Debug.WriteLine("yadda");
+                            Debug.WriteLine(bomb.GetTimeDigits()[3] % 2);
+                            if (bomb.GetTimeDigits()[3] % 2 == 0)
                             {
                                 defused = true;
                             }
@@ -110,6 +116,7 @@ public class TheButton : BombModule
                         }
                         else
                         {
+                            Debug.WriteLine($"Time digits: {string.Join("", bomb.GetTimeDigits())}");
                             if (bomb.GetTimeDigits().SubArray(0, 2).All(d => d != 3)){
                                 defused = true;
                             }
@@ -128,7 +135,20 @@ public class TheButton : BombModule
 
     public override void Sync(Bomb bomb)
     {
-        for (int i = 0; i < lights.Length; i++)
+        List<Object> o = new();
+        for(int i = 0; i < lights.Length; i++)
+        {
+            if (lights[i] == 1)
+            {
+                o.Add(new OscTrue());
+            }
+            else
+            {
+                o.Add(new OscFalse());
+            }
+        }
+        bomb.QueueMessage(new OscMessage(new CoreOSC.Address("/button/lights"), o));
+        /*for (int i = 0; i < lights.Length; i++)
         {
             if (lights[i] == 1)
             {
@@ -138,6 +158,6 @@ public class TheButton : BombModule
             {
                 bomb.QueueMessage(new OscMessage(new CoreOSC.Address($"/button/light/off"), [i]));
             }
-        }
+        }*/
     }
 }

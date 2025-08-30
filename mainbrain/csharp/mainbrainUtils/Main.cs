@@ -11,6 +11,7 @@ using CoreOSC.Types;
 using Stride.Core.Diagnostics;
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -27,19 +28,36 @@ public class Bomb
     public BombConnectionManager connectionManager;
     public List<BombModule> modules = [];
 
-    private int strikes = 0;
+    public int strikes = 1;
 
     public float secondsRemaining;
+    public float timerLength = 60 * 10;
 
-    public bool running = true;
+    public bool running = false;
     public bool defused = false;
+
+    public int seed = 0;
+
+    public Queue<string> latestMessages = new();
 
     public Bomb()
     {
-        Random rng = new(0);
+        Init();
+    }
+
+    public void Init()
+    {
+        modules.Clear();
+        secondsRemaining = timerLength;
+        running = false;
+        defused = false;
+        strikes = 0;
+        Random rng = new(seed);
         modules.Add(new WordMaze(rng));
         modules.Add(new Wires(rng));
         modules.Add(new TheButton(rng));
+        modules.Add(new BackgroundModule());
+        Sync();
     }
     
     List<OscMessage> messagequeue = [];
@@ -62,8 +80,36 @@ public class Bomb
         }
     }
 
-    public List<OscMessage> Update()
+    public List<OscMessage> Update(float delta)
     {
+        if (running)
+        {
+            secondsRemaining -= delta;
+        }
+
+        bool allDefused = true;
+        foreach (var module in modules)
+        {
+            module.Update(this);
+            if(!module.defused)
+            {
+                allDefused = false;
+            }
+
+        }
+
+        if(allDefused && !defused)
+        {
+            defused = true;
+            running = false;
+            Console.WriteLine("Bomb defused!");
+        }
+
+        if (secondsRemaining <= 0 && !defused)
+        {
+            Explode();
+        }
+
         if (messagequeue.Count > 0)
         {
             List<OscMessage> temp = new(messagequeue);
@@ -76,6 +122,11 @@ public class Bomb
     public void QueueMessage(OscMessage message)
     {
         messagequeue.Add(message);
+        latestMessages.Enqueue($"{message.Address.Value.ToString()} [{string.Join(", ", message.Arguments)}]");
+        if (latestMessages.Count > 5)
+        {
+            latestMessages.Dequeue();
+        }
     }
 
     public void AddStrike()
@@ -83,18 +134,29 @@ public class Bomb
         strikes++;
         if (strikes >= 3)
         {
-            // TODO
-            Console.WriteLine("Bomb exploded!");
+            Explode();
         }
+    }
+
+    private void Explode()
+    {
+        // TODO explode
+        running = false;
+        Console.WriteLine("Bomb exploded!");
     }
 
     public int[] GetTimeDigits()
     {
+        int s = (int)Math.Ceiling(secondsRemaining);
+
+        int minutes = (int)(s / 60);
+        int seconds = (int)(s % 60);
+
         return new int[] {
-            (int)(secondsRemaining / 600) % 10,
-            (int)(secondsRemaining / 60) % 10,
-            (int)(secondsRemaining / 10) % 10,
-            (int)(secondsRemaining) % 10
+            minutes / 10,
+            minutes % 10,
+            seconds / 10,
+            seconds % 10
         };
     }
 }
@@ -129,6 +191,8 @@ public class BombConnectionManager
 
     OscMessageConverter converter = new();
 
+    Stopwatch sw = Stopwatch.StartNew();
+
     IPEndPoint any = new(IPAddress.Any, 4444);
 
     int heartbeat = 0;
@@ -142,6 +206,9 @@ public class BombConnectionManager
 
     public void Update() // Called by VVVV
     {
+        float delta = ((float)sw.ElapsedMilliseconds / 1000.0f);
+        sw.Restart();
+
         while (receiver.Available > 0)
         {
             IPEndPoint senderEndpoint = new IPEndPoint(IPAddress.Any, 4500);
@@ -212,7 +279,7 @@ public class BombConnectionManager
         }
         else
         {
-            heartbeat = 10 * 50 * 99999;
+            heartbeat = 60 * 10; // every ten secs
             foreach (var kvp in idToBomb)
             {
                 kvp.Value.Sync();
@@ -228,7 +295,7 @@ public class BombConnectionManager
 
         foreach (var kvp in idToBomb) // "Game loop" + retreive messages from modules and transmit them to nodes
         {
-            var messages = kvp.Value.Update(); 
+            var messages = kvp.Value.Update(delta); 
             if (messages != null && messages.Count > 0)
             {
                 foreach (OscMessage retMessage in messages)
