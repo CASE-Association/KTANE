@@ -184,7 +184,7 @@ void handleWordMaze(OSCMessage &msg);
 void LEDmanager(int LEDnNumber, CRGB color);
 void handleLED(OSCMessage &msg);
 void handleTimer(OSCMessage &msg);
-
+void handleStrikes(OSCMessage &msg);
 
 void setup() {
   // put your setup code here, to run once:
@@ -276,22 +276,35 @@ void setup() {
   
   bool connected = false;
   
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("scanning...");
+  lcd.setCursor(0, 1);
+  lcd.print(targetIp);
 
   while (!connected){
+
+      
     for(int i = 1; i < 254; i++){
       targetIp[3] = i;
       Serial.print("Sending to ");
       Serial.println(targetIp);
       udp.beginPacket(targetIp, targetPort);
 
-      //only refresh lcd every tenth iteration
-      if (i % 10 == 0) {
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print("Connecting to:");
-        lcd.setCursor(0, 1);
-        lcd.print(targetIp);
-      }
+  
+
+      //do all the fancy stuff with lights and 14 seg
+      //limit to 8 leds
+      LEDmanager(i%8, CRGB::Green);
+      FastLED.show();
+
+      
+      segDisplay.displaybuffer[0] = numbers[(i/100)%10];
+      segDisplay.displaybuffer[1] = numbers[(i/10)%10];
+      segDisplay.displaybuffer[2] = numbers[i%10];
+      segDisplay.displaybuffer[3] = numbers[0];
+      segDisplay.writeDisplay();
+      delay(20);
 
       OSCMessage msg = OSCMessage("/connect");
       msg.add(i);
@@ -315,6 +328,7 @@ void setup() {
         Serial.print("Received: '");
         Serial.print(msgrecv.getAddress());
         Serial.println("'");
+
       }
     }
   }
@@ -328,6 +342,17 @@ void setup() {
   lcd.print("Final IP: ");
   lcd.setCursor(0, 1);
   lcd.print(targetIp);
+
+  segDisplay.clear();
+
+  LEDmanager(0, CRGB::Black);
+  LEDmanager(1, CRGB::Black);
+  LEDmanager(2, CRGB::Black);
+  LEDmanager(3, CRGB::Black);
+  LEDmanager(4, CRGB::Black);
+  LEDmanager(5, CRGB::Black);
+  LEDmanager(6, CRGB::Black);
+  LEDmanager(7, CRGB::Black);
 
 }
 
@@ -400,7 +425,7 @@ void loop() {
 
     //"DO NOT PRESS" button logic
     updateInput(doNotPressButton, 10);
-    Serial.println("Button state: " + String(doNotPressButton.state) + " last state: " + String(doNotPressButton.lastState));
+    //Serial.println("Button state: " + String(doNotPressButton.state) + " last state: " + String(doNotPressButton.lastState));
     if (doNotPressButton.state == HIGH && lastButtonState == false) {
       // Send OSC message
       udp.beginPacket(targetIp, targetPort);
@@ -411,7 +436,7 @@ void loop() {
       msg.empty();
 
       lastButtonState = true;
-
+      Serial.println("Button pressed!");
     }
     else if (doNotPressButton.state == LOW && lastButtonState == true) {
       // Send OSC message
@@ -423,6 +448,7 @@ void loop() {
       msg.empty();
 
       lastButtonState = false;
+      Serial.println("Button released!");
     }
 
 
@@ -560,7 +586,18 @@ void handleOSCMessage(OSCMessage &msg) {
     handleTimer(msg);
   }
 
+  else if (msg.fullMatch("/strikes")){
+    handleStrikes(msg);
+  }
 
+
+}
+
+void handleStrikes(OSCMessage &msg) {
+  // Handle strikes message, set cursor to 16-7 on first row and display
+  if (msg.isInt(0)) {
+    display(String(msg.getInt(0)), 15, 0, false);
+  }
 }
 
 void handleTimer (OSCMessage &msg) {
@@ -603,7 +640,7 @@ void handleWordMaze(OSCMessage &msg) {   // this functions displays the words fo
 void handleLED(OSCMessage &msg) {   // this functions displays the words for the word maze
 
   // we recieve 8 booleans corrsponding to each light. loop over and light up if true
-  for(int i = 0; i < 7; i++) {
+  for(int i = 0; i < 8; i++) {
     if (msg.getBoolean(i)) {
       LEDmanager(logicalLEDNumberToPhysicalPosition[i], CRGB::Red);
     }
