@@ -24,7 +24,7 @@ public class WordMaze : BombModule
     public WordMaze(Random rng)
     {
 
-        string mazeSrc = "de,dem,,dom,vad sa du,va,,,sig,säg,sej,,fel,,nej,,vänta,,,,,inget,,börja om,,tvärtom,,,stop,stopp,,,,,,inget,,skäl,själ,stjäl,höger,,vänster,,,,,bakåt,jord,,hjord,gjord,sett,,sätt,set,,,,vänta,,,åter,ja";
+        string mazeSrc = "de,dem,dom,,vänta,,,,vad\r\nsa du,,,va,,fel,,nej,,tvärtom,,,inget,börja om,,,inget,,,,,sig,säg,sej,,,bakåt,,,stop,,stopp,vänta,,,,,skäl,själ,stjäl,,,höger,vänster,jord,,hjord,gjord,åter,,,ja,sett,,sätt,set";
         maze = mazeSrc.Split(',');
 
 
@@ -130,7 +130,7 @@ public class WordMaze : BombModule
         if (defused)
         {
             line1 = "";
-            line2 = "MODULE DEFUSED";
+            line2 = "MAZE DEFUSED";
         }
         else
         {

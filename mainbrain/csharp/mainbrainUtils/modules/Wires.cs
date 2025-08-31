@@ -33,6 +33,11 @@ public class Wires : BombModule
             int wireIndex = (int)value;
             if (wireIndex >= 0 && wireIndex < wires.Length)
             {
+                if(wires[wireIndex] == Wire.Cut)
+                {
+                    Console.WriteLine($"Wire {wireIndex} already cut, ignoring.");
+                    return;
+                }
                 wires[wireIndex] = Wire.Cut;
                 Console.WriteLine($"Wire {wireIndex} cut.");
 
@@ -126,6 +131,11 @@ public class Wires : BombModule
                 currentRuleset = "3wireswip";
                 continue;
             }
+            else if (action == (int)Op.Stop)
+            {
+                correctAction = (int)Op.Stop;
+                break;
+            }
             instruction++;
         }
     }
@@ -135,10 +145,10 @@ public class Wires : BombModule
         { "3wires", new List<Delegate>{
             (Wire[] wires) => wires[3] == Wire.Cut && wires[4] == Wire.Cut ? (int)Op.To3wiresWIP : (int)Op.Skip, // If the bottom two wires are cut, proceed to “3 wires WIP” ruleset.
             (Wire[] wires) => wires.Any(wire => wire == Wire.Black)? wires.IndexOf(wire => wire == Wire.Black) + (int)Op.CutAndStop : (int)Op.Skip, // If there is a Black wire, cut the top black wire and stop.
-            () => (int)Op.Stop,
+            (Wire[] wires) => GetNthUncutWire(wires, 2) // Otherwise, cut the middle wire.
         }},
         { "4wires", new List<Delegate>{
-            (Wire[] wires) => wires.Any(wire => wire == Wire.Red) ? (int)Op.To5wires : (int)Op.Skip, // If there is a red wire, proceed to “5 wires”.
+            (Wire[] wires) => wires[GetNthUncutWire(wires, 1)] == Wire.Red ? (int)Op.To5wires : (int)Op.Skip, // If the top wire is red, proceed to “5 wires”.
             (Wire[] wires) => wires.Count(wire => wire == Wire.Yellow) > 1 ? 4 - wires.Reverse().IndexOf(wire => wire == Wire.Yellow) : (int)Op.Skip, // If there are more than 1 Yellow wire, cut the first Yellow wire.
             // If an even number of wires are cut, cut the first uncut wire. (unreachable, since there's 5 wires in total)
             (Wire[] wires) => wires[GetNthUncutWire(wires, 1)] != Wire.Yellow ? GetNthUncutWire(wires, 1) + (int)Op.CutAndStop : (int)Op.Skip, // If the top wire is not Yellow, cut it and stop.
@@ -154,7 +164,7 @@ public class Wires : BombModule
         }},
         { "3wireswip", new List<Delegate>{
             (Wire[] wires) => wires[GetNthUncutWire(wires, 3)] == Wire.Blue ? GetNthUncutWire(wires, 1) + (int)Op.CutAndStop : (int)Op.Skip, // If the last wire is blue, cut the top wire and stop. getnth is required because wires.last() might be a cut wire
-            (Wire[] wires) => (int)Op.Stop, // Otherwise, stop.
+            (Wire[] wires) => GetNthUncutWire(wires, 1), // Otherwise, stop.
         }},
         { "stop", new List<Delegate>{
             (Wire[] wires) => (int)Op.Stop

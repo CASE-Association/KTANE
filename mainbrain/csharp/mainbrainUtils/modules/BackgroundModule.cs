@@ -19,13 +19,15 @@ public class BackgroundModule: BombModule
     {
         int t = (int)Math.Ceiling(bomb.secondsRemaining);
         bool sync = false;
-        if (lastSeconds != t)
+        if (t < lastSeconds)
         {
             sync = true;
-            lastSeconds = t;
+            bomb.Beep(0.01f);
         }
+        ;
+        lastSeconds = t;
 
-        if(sync)
+        if (sync)
         {
             Sync(bomb);
         }

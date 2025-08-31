@@ -16,6 +16,9 @@ public class TheButton : BombModule
 
     public int stepA;
 
+    int lastStrikes = 0;
+    int lightBlink = 0;
+
     enum Mode
     {
         A,
@@ -133,21 +136,58 @@ public class TheButton : BombModule
         }
     }
 
-    public override void Sync(Bomb bomb)
+    public override void Update(Bomb bomb)
     {
-        List<Object> o = new();
-        for(int i = 0; i < lights.Length; i++)
+        if (lastStrikes != bomb.strikes)
         {
-            if (lights[i] == 1)
+            lastStrikes = bomb.strikes;
+            lightBlink = 255;
+            bomb.Beep(1.0f);
+            Sync(bomb);
+        }
+
+        if(lightBlink > 0)
+        {
+            lightBlink -= 5;
+            if (lightBlink < 0)
             {
-                o.Add(new OscTrue());
+                lightBlink = 0;
+                Task.Delay(50).ContinueWith(t => Sync(bomb));
             }
             else
             {
-                o.Add(new OscFalse());
+                Sync(bomb);
             }
         }
-        bomb.QueueMessage(new OscMessage(new CoreOSC.Address("/button/lights"), o));
+    }
+
+    public override void Sync(Bomb bomb)
+    {
+        if (defused)
+        {
+            bomb.QueueMessage(new OscMessage(new CoreOSC.Address("/button/lights/override"), [0, 150, 0]));
+        }
+        else if(lightBlink > 0)
+        {
+            bomb.QueueMessage(new OscMessage(new CoreOSC.Address("/button/lights/override"), [lightBlink, 0, 0]));
+        } 
+        else
+        {
+            List<Object> o = new();
+            for (int i = 0; i < lights.Length; i++)
+            {
+                if (lights[i] == 1)
+                {
+                    o.Add(new OscTrue());
+                }
+                else
+                {
+                    o.Add(new OscFalse());
+                }
+            }
+            bomb.QueueMessage(new OscMessage(new CoreOSC.Address("/button/lights"), o));
+        }
+            
         /*for (int i = 0; i < lights.Length; i++)
         {
             if (lights[i] == 1)
