@@ -94,7 +94,7 @@ IPAddress targetIp = IPAddress(192, 168, 1, 223); // does not matter
 
 WiFiUDP udp;
 
-char* recvbuf = new char[1024];
+char* recvbuf = new char[8192];
 
 //---------------------------------------------------------
 struct debouncedInput {
@@ -107,7 +107,7 @@ struct debouncedInput {
 
 void initInput(debouncedInput &input, int pin, bool startingState) {
   input.pin = pin;
-  pinMode(pin, INPUT);
+  pinMode(pin, INPUT_PULLDOWN);
   input.state = startingState;
   input.lastReading = startingState;
   input.lastDebounceTime = millis();
@@ -145,7 +145,8 @@ const int WIRE_PINS[5] = {12, 14, 27, 26, 25};
 bool wireStates[5] = {true, true, true, true, true};
 debouncedInput wireInputs[5];
 
-
+// buzzer
+const int buzzerPin = 17;
 
 // LED lights
 #define LED_PIN 16
@@ -185,6 +186,7 @@ void LEDmanager(int LEDnNumber, CRGB color);
 void handleLED(OSCMessage &msg);
 void handleTimer(OSCMessage &msg);
 void handleStrikes(OSCMessage &msg);
+void handleBuzzer(OSCMessage &msg);
 
 void setup() {
   // put your setup code here, to run once:
@@ -241,6 +243,8 @@ void setup() {
   initInput(doNotPressButton, BUTTON_PIN, false);
 
   delay(1000);
+
+  pinMode(buzzerPin, OUTPUT);
 
 
   WiFi.mode(WIFI_STA);
@@ -396,14 +400,14 @@ void loop() {
 
 
   //wire cutting logic, 
-  if(!allWiresCut){
+  
     for (int i = 0; i < 5; i++) {
 
       updateInput(wireInputs[i]);
-
-      if (wireInputs[i].state == LOW && wireStates[i] == true) {
+      Serial.println("Wire " + String(i) + " state: " + String(wireInputs[i].state) + " last state: " + String(wireInputs[i].lastState));
+      if (wireInputs[i].state == LOW && wireInputs[i].lastState == HIGH) {
         udp.beginPacket(targetIp, targetPort);
-        OSCMessage msg("/wires/cut/"); // 
+        OSCMessage msg("/wires/cut/");
         msg.add(i);
         msg.send(udp);
         udp.endPacket();
@@ -413,13 +417,7 @@ void loop() {
       }
       
       //check if all wires are cut, set allwirescut to true
-      allWiresCut = true;
-      for (int j = 0; j < 5; j++) {
-        if (wireStates[j] == true) {
-          allWiresCut = false;
-          break;
-        }
-      }
+
     }
 
 
@@ -452,7 +450,7 @@ void loop() {
     }
 
 
-  }
+  
 
 
 
@@ -590,6 +588,9 @@ void handleOSCMessage(OSCMessage &msg) {
     handleStrikes(msg);
   }
 
+  else if (msg.fullMatch("/beep")) {
+    handleBuzzer(msg);
+  }
 
 }
 
@@ -629,6 +630,18 @@ void handleWordMaze(OSCMessage &msg) {   // this functions displays the words fo
 } 
 
 
+void handleBuzzer(OSCMessage &msg) {  //the argument is a boolean, if true, start buzz, if false stop buzz
+  if (msg.isBoolean(0)) {
+    bool beep = msg.getBoolean(0);
+    if (beep) {
+      digitalWrite(buzzerPin, HIGH);  // Start buzzing at 1000Hz
+    } else {
+      digitalWrite(buzzerPin, LOW);  // Stop buzzing
+    }
+  }
+
+}
+
 // void handleLED(OSCMessage &msg, bool onOrOff) {   // this functions displays the words for the word maze
 //   if (msg.isInt(0)) { // check if the message is for displaying the first word
 //     int addressedLed = msg.getInt(0);
@@ -642,7 +655,7 @@ void handleLED(OSCMessage &msg) {   // this functions displays the words for the
   // we recieve 8 booleans corrsponding to each light. loop over and light up if true
   for(int i = 0; i < 8; i++) {
     if (msg.getBoolean(i)) {
-      LEDmanager(logicalLEDNumberToPhysicalPosition[i], CRGB::Red);
+      LEDmanager(logicalLEDNumberToPhysicalPosition[i], CRGB::Green);
     }
   }
 
