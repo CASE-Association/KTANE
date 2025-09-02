@@ -16,8 +16,8 @@ public class TheButton : BombModule
 
     public int stepA;
 
-    int lastStrikes = 0;
-    int lightBlink = 0;
+    //int lastStrikes = 0;
+    //int lightBlink = 0;
 
     enum Mode
     {
@@ -25,6 +25,8 @@ public class TheButton : BombModule
         B,
         C
     }
+
+    Task blinkTask = null;
 
     int[][] stepALights =
     [
@@ -138,10 +140,11 @@ public class TheButton : BombModule
 
     public override void Update(Bomb bomb)
     {
-        if (lastStrikes != bomb.strikes)
+        /*if (lastStrikes != bomb.strikes)
         {
             lastStrikes = bomb.strikes;
-            lightBlink = 255;
+            //lightBlink = 255;
+            bomb.BlinkLights([255, 0, 0], [[1.0f, 400.0f],[0.0f, 200.0f],[1.0f, 400.0f], [0.0f, 200.0f], [1.0f, 0.0f]], "/button/lights/override", 0.01f);
             bomb.Beep(1.0f);
             Sync(bomb);
         }
@@ -158,7 +161,18 @@ public class TheButton : BombModule
             {
                 Sync(bomb);
             }
+        }*/
+
+        if(blinkTask != null && blinkTask.IsCompleted)
+        {
+            blinkTask = null;
+            Sync(bomb);
         }
+    }
+
+    public override void OnStrike(Bomb bomb)
+    {
+        blinkTask = bomb.BlinkLights([255, 0, 0], [[1.0f, 0.0f]], "/button/lights/override", 0.05f, -1);
     }
 
     public override void Sync(Bomb bomb)
@@ -167,10 +181,10 @@ public class TheButton : BombModule
         {
             bomb.QueueMessage(new OscMessage(new CoreOSC.Address("/button/lights/override"), [0, 150, 0]));
         }
-        else if(lightBlink > 0)
+        /*else if(lightBlink > 0)
         {
             bomb.QueueMessage(new OscMessage(new CoreOSC.Address("/button/lights/override"), [lightBlink, 0, 0]));
-        } 
+        } */
         else
         {
             List<Object> o = new();

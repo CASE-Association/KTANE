@@ -30,6 +30,9 @@ public class Bomb
 
     float beepTime = 0.0f;
 
+    private bool lastRunning = false;
+    private int lastNumDefused = 0;
+
     public Bomb()
     {
         Init();
@@ -47,6 +50,7 @@ public class Bomb
         modules.Add(new Wires(rng));
         modules.Add(new TheButton(rng));
         modules.Add(new BackgroundModule());
+        lastNumDefused = 0;
         Sync();
     }
 
@@ -74,6 +78,25 @@ public class Bomb
 
     public List<OscMessage> Update(float delta)
     {
+        if(lastRunning != running)
+        {
+            if (running)
+            {
+                foreach(var module in modules)
+                {
+                    module.OnStart(this);
+                }
+            }
+            else
+            {
+                foreach (var module in modules)
+                {
+                    module.OnStop(this);
+                }
+            }
+            lastRunning = running;
+        }
+
         if (running)
         {
             secondsRemaining -= delta;
@@ -81,6 +104,7 @@ public class Bomb
         deltaTime = delta;
 
         bool allDefused = true;
+        int numDefused = 0;
         foreach (var module in modules)
         {
             module.Update(this);
@@ -88,17 +112,32 @@ public class Bomb
             {
                 allDefused = false;
             }
-
+            else
+            {
+                numDefused++;
+            }
         }
+
+        
 
         if (allDefused && !defused)
         {
             defused = true;
             running = false;
+            foreach (var module in modules)
+            {
+                module.OnBombDefused(this);
+            }
             Console.WriteLine("Bomb defused!");
         }
-
-        if (secondsRemaining <= 0 && !defused)
+        else if (numDefused != lastNumDefused)
+        {
+            lastNumDefused = numDefused;
+            foreach (var module in modules)
+            {
+                module.OnModuleDefused(this);
+            }
+        } else if (secondsRemaining <= 0 && !defused)
         {
             Explode();
         }
@@ -144,12 +183,23 @@ public class Bomb
         {
             Explode();
         }
+        else
+        {
+            foreach (var module in modules)
+            {
+                module.OnStrike(this);
+            }
+        }
     }
 
     private void Explode()
     {
         // TODO explode
         running = false;
+        foreach (var module in modules)
+        {
+            module.OnExplode(this);
+        }
         Console.WriteLine("Bomb exploded!");
     }
 
@@ -167,6 +217,52 @@ public class Bomb
             seconds % 10
         };
     }
+
+    int blinkLightPriority = 0;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="colour">3 int array containing the colour to blink.</param>
+    /// <param name="sequence">A list of steps. Each step has two floats: one for brightness, one for step length</param>
+    /// <param name="bomb"></param>
+    /// <returns></returns>
+    public async Task BlinkLights(int[] colour, float[][] sequence, string address, float fadeSpeed, int priority)
+    {
+        if (priority < blinkLightPriority && priority != -1)
+        {
+            return;
+        }
+        if (priority != -1)
+        {
+            blinkLightPriority = priority;
+        }
+        CoreOSC.Address addr = new CoreOSC.Address(address);
+        float val = 0.0f;
+        for (int i = 0; i < sequence.Length; i++)
+        {
+            if (priority < blinkLightPriority && priority != -1)
+            {
+                return;
+            }
+            val = sequence[i][0];
+            this.QueueMessage(new CoreOSC.OscMessage(addr, [(int)(colour[0] * val), (int)(colour[1] * val), (int)(colour[2] * val)]));
+            await Task.Delay((int)sequence[i][1]);
+        }
+        while (val > 0.0f)
+        {
+            if (priority < blinkLightPriority && priority != -1)
+            {
+                return;
+            }
+            val -= fadeSpeed;
+            if (val < 0.0f) val = 0.0f;
+            this.QueueMessage(new CoreOSC.OscMessage(addr, [(int)(colour[0] * val), (int)(colour[1] * val), (int)(colour[2] * val)]));
+            await Task.Delay(50);
+        }
+
+        blinkLightPriority = 0;
+    }
 }
 
 public abstract class BombModule
@@ -176,4 +272,11 @@ public abstract class BombModule
     public virtual void Update(Bomb bomb) { }
     public virtual void Sync(Bomb bomb) { }
     public bool defused = false;
+
+    public virtual void OnStrike(Bomb bomb) { }
+    public virtual void OnModuleDefused(Bomb bomb) { }
+    public virtual void OnStart(Bomb bomb) { }
+    public virtual void OnStop(Bomb bomb) { }
+    public virtual void OnExplode(Bomb bomb) { }
+    public virtual void OnBombDefused(Bomb bomb) { }
 }

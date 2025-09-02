@@ -4,5 +4,14 @@
         <name>mainbrainUtils</name>
     </assembly>
     <members>
+        <member name="M:Main.Bomb.BlinkLights(System.Int32[],System.Single[][],System.String,System.Single,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="colour">3 int array containing the colour to blink.</param>
+            <param name="sequence">A list of steps. Each step has two floats: one for brightness, one for step length</param>
+            <param name="bomb"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>
