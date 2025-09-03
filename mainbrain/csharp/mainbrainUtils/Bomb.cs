@@ -49,8 +49,9 @@ public class Bomb
         modules.Add(new WordMaze(rng));
         modules.Add(new Wires(rng));
         modules.Add(new TheButton(rng));
-        modules.Add(new BackgroundModule());
+        modules.Add(new BackgroundModule(this));
         lastNumDefused = 0;
+
         Sync();
     }
 
@@ -137,7 +138,7 @@ public class Bomb
             {
                 module.OnModuleDefused(this);
             }
-        } else if (secondsRemaining <= 0 && !defused)
+        } else if (secondsRemaining <= 0.0f && !defused && running)
         {
             Explode();
         }

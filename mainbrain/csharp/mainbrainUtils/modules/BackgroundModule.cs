@@ -10,9 +10,11 @@ public class BackgroundModule: BombModule
 {
     int lastSeconds = -1;
 
-    public BackgroundModule()
+    public BackgroundModule(Bomb bomb)
     {
         defused = true;
+        bomb.QueueMessage(new CoreOSC.OscMessage(new CoreOSC.Address("/fx/audio/postgame_happy"), [new CoreOSC.OscFalse()]));
+        bomb.QueueMessage(new CoreOSC.OscMessage(new CoreOSC.Address("/fx/audio/postgame_sad"), [new CoreOSC.OscFalse()]));
     }
 
     public override void Update(Bomb bomb)
@@ -58,11 +60,13 @@ public class BackgroundModule: BombModule
     {
         bomb.BlinkLights([255, 255, 255], [[1.0f, 0.0f]], "/fx/lights/override", 0.004f, 10);
         bomb.QueueMessage(new CoreOSC.OscMessage(new CoreOSC.Address("/fx/audio/bombdefused")));
+        bomb.QueueMessage(new CoreOSC.OscMessage(new CoreOSC.Address("/fx/audio/postgame_happy"), [new CoreOSC.OscTrue()]));
     }
 
     public override void OnExplode(Bomb bomb)
     {
         bomb.QueueMessage(new CoreOSC.OscMessage(new CoreOSC.Address("/fx/audio/explode")));
+        bomb.QueueMessage(new CoreOSC.OscMessage(new CoreOSC.Address("/fx/audio/postgame_sad"), [new CoreOSC.OscTrue()]));
         ExplosionBlinkSequence(bomb);
     }
 
