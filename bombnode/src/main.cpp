@@ -132,6 +132,7 @@ void updateInput(debouncedInput &input, unsigned long debounceDelay = 100) {
 
 
 
+
 // LCD display
 Adafruit_RGBLCDShield lcd = Adafruit_RGBLCDShield();
 #define WHITE 0x7
@@ -187,6 +188,10 @@ void handleLED(OSCMessage &msg);
 void handleTimer(OSCMessage &msg);
 void handleStrikes(OSCMessage &msg);
 void handleBuzzer(OSCMessage &msg);
+void handleLEDOverride(OSCMessage &msg); 
+
+
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -217,7 +222,7 @@ void setup() {
   createSweCharacters(); // custom chars for lcd
 
   segDisplay.begin(0x70);
-  segDisplay.setBrightness(10);
+  segDisplay.setBrightness(2);
   // segDisplay.displaybuffer[0] = numbers[0];
   // segDisplay.writeDisplay();
   //write all numbers 1-10 on the display
@@ -303,10 +308,11 @@ void setup() {
       FastLED.show();
 
       
-      segDisplay.displaybuffer[0] = numbers[(i/100)%10];
-      segDisplay.displaybuffer[1] = numbers[(i/10)%10];
-      segDisplay.displaybuffer[2] = numbers[i%10];
-      segDisplay.displaybuffer[3] = numbers[0];
+      segDisplay.displaybuffer[0] = numbers[0];
+      segDisplay.displaybuffer[1] = numbers[(i/100)%10];
+      segDisplay.displaybuffer[2] = numbers[(i/10)%10];
+      segDisplay.displaybuffer[3] = numbers[i%10];
+      
       segDisplay.writeDisplay();
       delay(20);
 
@@ -366,8 +372,6 @@ void setup() {
 
 void loop() {
 
-
-
   if (udp.parsePacket() > 0)
   {
     OSCMessage msgrecv;
@@ -404,7 +408,7 @@ void loop() {
     for (int i = 0; i < 5; i++) {
 
       updateInput(wireInputs[i]);
-      Serial.println("Wire " + String(i) + " state: " + String(wireInputs[i].state) + " last state: " + String(wireInputs[i].lastState));
+      //Serial.println("Wire " + String(i) + " state: " + String(wireInputs[i].state) + " last state: " + String(wireInputs[i].lastState));
       if (wireInputs[i].state == LOW && wireInputs[i].lastState == HIGH) {
         udp.beginPacket(targetIp, targetPort);
         OSCMessage msg("/wires/cut/");
@@ -449,19 +453,7 @@ void loop() {
       Serial.println("Button released!");
     }
 
-
-  
-
-
-
-
-
-  // put your main code here, to run repeatedly:
-
 }
-
-
-
 
 
 
@@ -576,9 +568,9 @@ void handleOSCMessage(OSCMessage &msg) {
   else if (msg.fullMatch("/button/lights")) {
     handleLED(msg);
   } 
-  // else if (msg.fullMatch("/button/light/off")) {
-  //   handleLED(msg, false);
-  // } 
+  else if (msg.fullMatch("/button/lights/override")) {
+    handleLEDOverride(msg);
+  } 
 
   else if (msg.fullMatch("/timer")){
     handleTimer(msg);
@@ -590,6 +582,19 @@ void handleOSCMessage(OSCMessage &msg) {
 
   else if (msg.fullMatch("/beep")) {
     handleBuzzer(msg);
+  }
+
+}
+
+void handleLEDOverride(OSCMessage &msg) { //we recieve 3 ints, for rgb values, make all the leds light this color
+  if (msg.isInt(0) && msg.isInt(1) && msg.isInt(2)) {
+    int red = msg.getInt(0);
+    int green = msg.getInt(1);
+    int blue = msg.getInt(2);
+    Serial.println("LED OVERRIDE to color R:" + String(red) + " G:" + String(green) + " B:" + String(blue));
+    for (int i = 0; i < 8; i++) {
+      LEDmanager(logicalLEDNumberToPhysicalPosition[i], CRGB(red, green, blue));
+    }
   }
 
 }
@@ -655,7 +660,10 @@ void handleLED(OSCMessage &msg) {   // this functions displays the words for the
   // we recieve 8 booleans corrsponding to each light. loop over and light up if true
   for(int i = 0; i < 8; i++) {
     if (msg.getBoolean(i)) {
-      LEDmanager(logicalLEDNumberToPhysicalPosition[i], CRGB::Green);
+      LEDmanager(logicalLEDNumberToPhysicalPosition[i], CRGB::OrangeRed);
+    }
+    else {
+      LEDmanager(logicalLEDNumberToPhysicalPosition[i], CRGB::Black);
     }
   }
 
