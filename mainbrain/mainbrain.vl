@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Document xmlns:p="property" xmlns:r="reflection" Id="LaSfVqXZsrBLivEdAzQPM0" LanguageVersion="2024.6.7" Version="0.128">
-  <NugetDependency Id="DCPXvc5oXQCOjRIeWcJ7pU" Location="VL.CoreLib" Version="2024.6.7" />
+<Document xmlns:p="property" xmlns:r="reflection" Id="LaSfVqXZsrBLivEdAzQPM0" LanguageVersion="2025.7.0" Version="0.128">
+  <NugetDependency Id="DCPXvc5oXQCOjRIeWcJ7pU" Location="VL.CoreLib" Version="2025.7.0" />
   <Patch Id="BrDIqn91no2MtD4bBErMec">
     <Canvas Id="GDPnYcMUAt7MEZsEGgEYAM" DefaultCategory="Main" BordersChecked="false" CanvasType="FullCategory" />
     <!--
@@ -15,7 +15,7 @@
       </p:NodeReference>
       <Patch Id="APN7Nivs6NjLv8eXD2v4y4">
         <Canvas Id="KwLDlNsryxYNaBzPbtOYXS" CanvasType="Group">
-          <Node Bounds="445,382,108,26" Id="QOQJPbtVLdUL5UxSFAMKQm">
+          <Node Bounds="445,382,108,19" Id="QOQJPbtVLdUL5UxSFAMKQm">
             <p:NodeReference LastCategoryFullName="Main.BombConnectionManager" LastDependency="mainbrainUtils.csproj">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <CategoryReference Kind="ClassType" Name="BombConnectionManager" />
@@ -23,7 +23,7 @@
             </p:NodeReference>
             <Pin Id="TJcXt8F3YMsPtub0mSjLVi" Name="Output" Kind="StateOutputPin" />
           </Node>
-          <Node Bounds="415,472,108,26" Id="F86AEV7PVWLO86l0irkDks">
+          <Node Bounds="415,472,108,19" Id="F86AEV7PVWLO86l0irkDks">
             <p:NodeReference LastCategoryFullName="Main.BombConnectionManager" LastDependency="mainbrainUtils.csproj">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <CategoryReference Kind="ClassType" Name="BombConnectionManager" />
@@ -33,7 +33,7 @@
             <Pin Id="G3GvIIqUgiKNfwRXQdZwU5" Name="Output" Kind="StateOutputPin" />
           </Node>
           <Pad Id="P1oeacW5GKkOuOsrd6pG4N" Bounds="456,440" />
-          <Node Bounds="572,463,108,26" Id="AMEo74NqbCZOauUd4GaHn7">
+          <Node Bounds="572,463,108,19" Id="AMEo74NqbCZOauUd4GaHn7">
             <p:NodeReference LastCategoryFullName="Main.BombConnectionManager" LastDependency="mainbrainUtils.csproj">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <CategoryReference Kind="ClassType" Name="BombConnectionManager" NeedsToBeDirectParent="true" />
@@ -42,7 +42,7 @@
             <Pin Id="SJ8Wjuo1O2fLlEUwGC5HZA" Name="Input" Kind="StateInputPin" />
             <Pin Id="RvLRybnR6YHL77Jh9eKevG" Name="Output" Kind="StateOutputPin" />
           </Node>
-          <Node Bounds="415,521,108,26" Id="CNACXV3VF65Mnl7t8AyNUH">
+          <Node Bounds="415,521,108,19" Id="CNACXV3VF65Mnl7t8AyNUH">
             <p:NodeReference LastCategoryFullName="Main.BombConnectionManager" LastDependency="mainbrainUtils.csproj">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <CategoryReference Kind="ClassType" Name="BombConnectionManager" />
@@ -93,7 +93,7 @@
                       <Patch Id="Uy8ShRwctaIQNwUkGlVDiW" Name="Create" ManuallySortedPins="true" />
                       <Patch Id="Igfg5ut94pMLFvtTfL60XI" Name="Update" ManuallySortedPins="true" />
                       <Patch Id="UlykvubJBYENn4pF34Cyl5" Name="Dispose" ManuallySortedPins="true" />
-                      <Node Bounds="2110,1787,55,26" Id="BlhWIaYIQ6DLtpAbiLt5d8">
+                      <Node Bounds="2110,1787,55,19" Id="BlhWIaYIQ6DLtpAbiLt5d8">
                         <p:NodeReference LastCategoryFullName="Main.Bomb" LastDependency="mainbrainUtils.csproj">
                           <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                           <CategoryReference Kind="ClassType" Name="Bomb" />
@@ -144,7 +144,7 @@
                             <Patch Id="SWLUzvB4vWNNEA6jxA0SD7" ManuallySortedPins="true">
                               <Patch Id="SuQZhN9PcFuNL30WWO4PeL" Name="Create" ManuallySortedPins="true" />
                               <Patch Id="O2PiSslLpftLCsjnFszxbJ" Name="Then" ManuallySortedPins="true" />
-                              <Node Bounds="2403,2034,40,26" Id="G3cWhAFmYrlP6XwzviegRS">
+                              <Node Bounds="2403,2034,40,19" Id="G3cWhAFmYrlP6XwzviegRS">
                                 <p:NodeReference LastCategoryFullName="Main.Wires" LastDependency="mainbrainUtils.csproj">
                                   <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                                   <CategoryReference Kind="ClassType" Name="Wires" />
@@ -316,7 +316,7 @@
                                 <Pin Id="IVJ7kdW8K8wLCGpUi0zNdy" Name="Enabled" Kind="InputPin" />
                                 <Pin Id="AmvXO5qJ46cPDNCImVp19i" Name="Output" Kind="OutputPin" />
                               </Node>
-                              <Node Bounds="2277,2166,77,26" Id="NDh6lHv86o7PyBkEXN47Yg">
+                              <Node Bounds="2277,2166,77,19" Id="NDh6lHv86o7PyBkEXN47Yg">
                                 <p:NodeReference LastCategoryFullName="Main.Wires" LastDependency="mainbrainUtils.csproj">
                                   <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                                   <Choice Kind="OperationCallFlag" Name="correctAction" />
@@ -385,7 +385,7 @@
                             <Patch Id="MpgyCFCrTu2Oj2HbtSw0YF" ManuallySortedPins="true">
                               <Patch Id="HPNXk81fQ0ZMq7RVpttL2x" Name="Create" ManuallySortedPins="true" />
                               <Patch Id="OEXuu7M35ZyPW5EgwWM6z5" Name="Then" ManuallySortedPins="true" />
-                              <Node Bounds="2749,1950,53,26" Id="LXhaPPHw0nwL3ljBDOdphk">
+                              <Node Bounds="2749,1950,53,19" Id="LXhaPPHw0nwL3ljBDOdphk">
                                 <p:NodeReference LastCategoryFullName="Main.TheButton" LastDependency="mainbrainUtils.csproj">
                                   <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                                   <CategoryReference Kind="ClassType" Name="TheButton" />
@@ -395,7 +395,7 @@
                                 <Pin Id="PZParSCGuM3MOh088IzMcT" Name="Output" Kind="StateOutputPin" />
                                 <Pin Id="GNb9cIGktDVONY97wMQ5yQ" Name="Step A" Kind="OutputPin" />
                               </Node>
-                              <Node Bounds="2749,2000,53,26" Id="Pf2aZ5A4MXpQMXz0NsG9n2">
+                              <Node Bounds="2749,2000,53,19" Id="Pf2aZ5A4MXpQMXz0NsG9n2">
                                 <p:NodeReference LastCategoryFullName="Main.TheButton" LastDependency="mainbrainUtils.csproj">
                                   <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                                   <CategoryReference Kind="ClassType" Name="TheButton" />
@@ -549,7 +549,7 @@
                             <ControlPoint Id="TTNsgcPgfFePqIvIqdr4YK" Bounds="2816,1930" Alignment="Top" />
                             <ControlPoint Id="CyirxzYxCo7O6Axz8fQXZD" Bounds="2835,2371" Alignment="Bottom" />
                           </Node>
-                          <Node Bounds="2199,1880,63,26" Id="BXuJeX3bwcMNRFR4q2lTBL">
+                          <Node Bounds="2199,1880,63,19" Id="BXuJeX3bwcMNRFR4q2lTBL">
                             <p:NodeReference LastCategoryFullName="Main.BombModule" LastDependency="mainbrainUtils.csproj">
                               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                               <CategoryReference Kind="ClassType" Name="BombModule" />
@@ -618,7 +618,7 @@
                             <Patch Id="BIx3bSZW7rQNlqymp99cLk" ManuallySortedPins="true">
                               <Patch Id="KVXK7jTfamTPuy6nNbKQZm" Name="Create" ManuallySortedPins="true" />
                               <Patch Id="L5pcRsncmu3MIkFSOLNh4E" Name="Then" ManuallySortedPins="true" />
-                              <Node Bounds="3192,2041,54,26" Id="DHddiNpdHhrPsVdO5wooUN">
+                              <Node Bounds="3192,2041,54,19" Id="DHddiNpdHhrPsVdO5wooUN">
                                 <p:NodeReference LastCategoryFullName="Main.WordMaze" LastDependency="mainbrainUtils.csproj">
                                   <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                                   <CategoryReference Kind="ClassType" Name="WordMaze" />
@@ -628,7 +628,7 @@
                                 <Pin Id="GEk9uOYC7jsQJYAMXg6xxA" Name="Output" Kind="StateOutputPin" />
                                 <Pin Id="C95nHvbRCC9OJjAuWBSu10" Name="X" Kind="OutputPin" />
                               </Node>
-                              <Node Bounds="3193,2078,54,26" Id="DuesFJaxCZAMtl3LfyJl68">
+                              <Node Bounds="3193,2078,54,19" Id="DuesFJaxCZAMtl3LfyJl68">
                                 <p:NodeReference LastCategoryFullName="Main.WordMaze" LastDependency="mainbrainUtils.csproj">
                                   <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                                   <Choice Kind="OperationCallFlag" Name="y" />
@@ -637,7 +637,7 @@
                                 <Pin Id="D1nU2jmK3iEOaQHULCRpFC" Name="Output" Kind="StateOutputPin" />
                                 <Pin Id="V1jtQnUzUfvOIEUdOmUHAj" Name="Y" Kind="OutputPin" />
                               </Node>
-                              <Node Bounds="3192,2117,54,26" Id="NoAd5u5QeLTPzWH04IiGFb">
+                              <Node Bounds="3192,2117,54,19" Id="NoAd5u5QeLTPzWH04IiGFb">
                                 <p:NodeReference LastCategoryFullName="Main.WordMaze" LastDependency="mainbrainUtils.csproj">
                                   <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                                   <Choice Kind="OperationCallFlag" Name="targetX" />
@@ -646,7 +646,7 @@
                                 <Pin Id="EMQ1VOaTn0FNq5bjDIkhh0" Name="Output" Kind="StateOutputPin" />
                                 <Pin Id="KKKGdeElzkkMkXiZF1x1Vl" Name="Target X" Kind="OutputPin" />
                               </Node>
-                              <Node Bounds="3191,2157,54,26" Id="TxE1rOL3cmvMT9Aq5ANi53">
+                              <Node Bounds="3191,2157,54,19" Id="TxE1rOL3cmvMT9Aq5ANi53">
                                 <p:NodeReference LastCategoryFullName="Main.WordMaze" LastDependency="mainbrainUtils.csproj">
                                   <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                                   <Choice Kind="OperationCallFlag" Name="targetY" />
@@ -772,7 +772,7 @@
                                 </Patch>
                                 <ControlPoint Id="BU4NeoIeTvPPTait0Buk13" Bounds="3477,2413" Alignment="Bottom" />
                               </Node>
-                              <Node Bounds="3261,2019,59,26" Id="BK6koJOpBkUPNNcXeSX4HU">
+                              <Node Bounds="3261,2019,59,19" Id="BK6koJOpBkUPNNcXeSX4HU">
                                 <p:NodeReference LastCategoryFullName="Main.WordMaze" LastDependency="mainbrainUtils.csproj">
                                   <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                                   <CategoryReference Kind="ClassType" Name="WordMaze" />
@@ -866,7 +866,7 @@
                         <ControlPoint Id="RKxu9yYMe0dPP509bh2yV8" Bounds="2281,1848" Alignment="Top" />
                         <ControlPoint Id="SWWb1oXLzCtNb19BBR1q9d" Bounds="2281,2758" Alignment="Bottom" />
                       </Node>
-                      <Node Bounds="1607,1830,81,26" Id="B9wGJ3WYBmXOb3zaMqJRK5">
+                      <Node Bounds="1607,1830,81,19" Id="B9wGJ3WYBmXOb3zaMqJRK5">
                         <p:NodeReference LastCategoryFullName="Main.Bomb" LastDependency="mainbrainUtils.csproj">
                           <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                           <CategoryReference Kind="ClassType" Name="Bomb" />
@@ -992,7 +992,7 @@
                         <Patch Id="HdnfBvlUhduNSivbXICAlY" ManuallySortedPins="true">
                           <Patch Id="UjYUgUdRQRiMHfmUYYFQvb" Name="Create" ManuallySortedPins="true" />
                           <Patch Id="FcoTZxX4lBiMjBccmrRpPu" Name="Then" ManuallySortedPins="true" />
-                          <Node Bounds="1578,2502,51,26" Id="NKyddv1DMEENmlhlVNqXYs">
+                          <Node Bounds="1578,2502,51,19" Id="NKyddv1DMEENmlhlVNqXYs">
                             <p:NodeReference LastCategoryFullName="Main.Bomb" LastDependency="mainbrainUtils.csproj">
                               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                               <CategoryReference Kind="ClassType" Name="Bomb" />
@@ -1027,7 +1027,7 @@
                         <Pin Id="QuSMmcNVLMFLAoquduO3KT" Name="Input 2" Kind="InputPin" />
                         <Pin Id="ALRK6SueW87OVMvTqpkm3I" Name="Output" Kind="StateOutputPin" />
                       </Node>
-                      <Node Bounds="1607,1880,38,26" Id="Ei9TyiHry4TO1fZO13Urox">
+                      <Node Bounds="1607,1880,38,19" Id="Ei9TyiHry4TO1fZO13Urox">
                         <p:NodeReference LastCategoryFullName="Main.Bomb" LastDependency="mainbrainUtils.csproj">
                           <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                           <CategoryReference Kind="ClassType" Name="Bomb" />
@@ -1058,6 +1058,7 @@
                         <Pin Id="M99xUb4mFgBK9rZY43taAP" Name="Name" Kind="InputPin" />
                         <Pin Id="GPSXOuTLtSfLU1At0xI9sh" Name="Glyph Range" Kind="InputPin" />
                         <Pin Id="TtKJIV4zGJ3LvYimnC4ODK" Name="Output" Kind="OutputPin" />
+                        <Pin Id="OUloEiKeF40MuHEUBqFjYU" Name="Custom Glypth Range" Kind="InputPin" />
                       </Node>
                       <Node Bounds="2017,2057,85,19" Id="UaqYs8V4ccAMS3o9iaf6ts">
                         <p:NodeReference LastCategoryFullName="ImGui.Styling" LastDependency="VL.ImGui.Skia.vl">
@@ -1085,7 +1086,7 @@
                         <Pin Id="VoxJabZBMpEMdVc5UlbTYr" Name="Style" Kind="InputPin" />
                         <Pin Id="MDNnegbsYS3OtAZxYHuFid" Name="Context" Kind="OutputPin" />
                       </Node>
-                      <Node Bounds="1607,1930,47,26" Id="RyYPLF2AhoXLskncae4cnC">
+                      <Node Bounds="1607,1930,47,19" Id="RyYPLF2AhoXLskncae4cnC">
                         <p:NodeReference LastCategoryFullName="Main.Bomb" LastDependency="mainbrainUtils.csproj">
                           <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                           <CategoryReference Kind="ClassType" Name="Bomb" />
@@ -1145,7 +1146,7 @@
                         <Patch Id="OO1o3P0NdM7QKyuJCyblJm" ManuallySortedPins="true">
                           <Patch Id="VSoupihBTxbNdBBNeefHfP" Name="Create" ManuallySortedPins="true" />
                           <Patch Id="AcGOk8htCMzQLTIhI2vNNb" Name="Then" ManuallySortedPins="true" />
-                          <Node Bounds="1818,2329,66,26" Id="OKHF4D3wT1ZMiNgi6VZTcz">
+                          <Node Bounds="1818,2329,66,19" Id="OKHF4D3wT1ZMiNgi6VZTcz">
                             <p:NodeReference LastCategoryFullName="Main.Bomb" LastDependency="mainbrainUtils.csproj">
                               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                               <CategoryReference Kind="ClassType" Name="Bomb" />
@@ -1157,7 +1158,7 @@
                           </Node>
                         </Patch>
                       </Node>
-                      <Node Bounds="1607,2210,52,26" Id="CuxpCoQGGzIP470qlY0fxM">
+                      <Node Bounds="1607,2210,52,19" Id="CuxpCoQGGzIP470qlY0fxM">
                         <p:NodeReference LastCategoryFullName="Main.Bomb" LastDependency="mainbrainUtils.csproj">
                           <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                           <CategoryReference Kind="ClassType" Name="Bomb" />
@@ -1177,7 +1178,7 @@
                         <Patch Id="L4t2Lf8qActQNsrZdnhCnm" ManuallySortedPins="true">
                           <Patch Id="U7HRQIY7CtyMchMXXee72d" Name="Create" ManuallySortedPins="true" />
                           <Patch Id="M0wRmgnvdHtL5ZRqrQRCfG" Name="Then" ManuallySortedPins="true" />
-                          <Node Bounds="1887,2539,37,26" Id="M7beFVrpTcuMTE2SyDZOvL">
+                          <Node Bounds="1887,2539,37,19" Id="M7beFVrpTcuMTE2SyDZOvL">
                             <p:NodeReference LastCategoryFullName="Main.Bomb" LastDependency="mainbrainUtils.csproj">
                               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                               <CategoryReference Kind="ClassType" Name="Bomb" />
@@ -1198,7 +1199,7 @@
                         <Patch Id="BCQ5KgPTvVYNgI9R88LD5S" ManuallySortedPins="true">
                           <Patch Id="OWPeGKbMslKQOgHzro3F92" Name="Create" ManuallySortedPins="true" />
                           <Patch Id="DONDrvGXABCLQ8qmyeGU4f" Name="Then" ManuallySortedPins="true" />
-                          <Node Bounds="1570,2635,85,26" Id="JbWCVQ1bmg2P6XnKBwgXP1">
+                          <Node Bounds="1570,2635,85,19" Id="JbWCVQ1bmg2P6XnKBwgXP1">
                             <p:NodeReference LastCategoryFullName="Main.Bomb" LastDependency="mainbrainUtils.csproj">
                               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                               <Choice Kind="OperationCallFlag" Name="SettimerLength" />
@@ -1218,7 +1219,7 @@
                           </Node>
                         </Patch>
                       </Node>
-                      <Node Bounds="1687,2300,71,26" Id="LPn9MhAXkARNpaYZ9AtM3B">
+                      <Node Bounds="1687,2300,71,19" Id="LPn9MhAXkARNpaYZ9AtM3B">
                         <p:NodeReference LastCategoryFullName="Main.Bomb" LastDependency="mainbrainUtils.csproj">
                           <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                           <Choice Kind="OperationCallFlag" Name="timerLength" />
@@ -1257,6 +1258,8 @@
                             <Pin Id="KV8w6XNY2LXMqWUgRBgmMw" Name="Context" Kind="InputPin" />
                             <Pin Id="HMlUD4ZXhVQOqIjdEIqFpQ" Name="Channel" Kind="InputPin" DefaultValue="0" />
                             <Pin Id="HG8U6enhRHoNAh3FGu814w" Name="Label" Kind="InputPin" DefaultValue="Seed" />
+                            <Pin Id="KDoDJlof8PNLTBzZjTnzMn" Name="Min" Kind="InputPin" />
+                            <Pin Id="VhhCk1WjkpkLn7uiUcy7hg" Name="Max" Kind="InputPin" />
                             <Pin Id="S3qXXjLXcQgPTbdp56UWJT" Name="Step" Kind="InputPin" />
                             <Pin Id="LvZHU7YZkDnLCPYmFXUwSa" Name="Step Fast" Kind="InputPin" />
                             <Pin Id="LKtUcvBwgVDLeXiYXWlsrF" Name="Flags" Kind="InputPin" />
@@ -1274,6 +1277,8 @@
                             <Pin Id="TCyVV0PPscVP2ZkNZ4ouiO" Name="Context" Kind="InputPin" />
                             <Pin Id="L0F5IxqLeyJLPadcShKnGn" Name="Channel" Kind="InputPin" />
                             <Pin Id="EkkuwqV8j34NHD5E2cLGY3" Name="Label" Kind="InputPin" DefaultValue="Timer Length (minutes)" />
+                            <Pin Id="VpQVJePkCaeOyAARhzYa2K" Name="Min" Kind="InputPin" />
+                            <Pin Id="TVYyMBmgYCnQNDSt5kl0U0" Name="Max" Kind="InputPin" />
                             <Pin Id="LUkvTuhcttAO5nUgTRCA9Z" Name="Step" Kind="InputPin" DefaultValue="0.5" />
                             <Pin Id="M6qviEg5lACL7Pi8KJnYe4" Name="Step Fast" Kind="InputPin" />
                             <Pin Id="MsADh1zBkacLDltiXEchcC" Name="Format" Kind="InputPin" DefaultValue="%.1f" />
@@ -1289,7 +1294,7 @@
                         <ControlPoint Id="UUZRnsdDvdSMgDHV4HY1T4" Bounds="1560,2430" Alignment="Bottom" />
                         <ControlPoint Id="Dz9vSjwuxeWPmW53i6iLZp" Bounds="1650,2430" Alignment="Bottom" />
                       </Node>
-                      <Node Bounds="1964,2420,85,26" Id="IW0NLr464stMB5723GSfTp">
+                      <Node Bounds="1964,2420,85,19" Id="IW0NLr464stMB5723GSfTp">
                         <p:NodeReference LastCategoryFullName="Main.Bomb" LastDependency="mainbrainUtils.csproj">
                           <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                           <CategoryReference Kind="ClassType" Name="Bomb" />
@@ -1393,12 +1398,15 @@
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="ProcessAppFlag" Name="Renderer" />
             </p:NodeReference>
-            <Pin Id="EqIl8At1Z2gOIThSdSv4hN" Name="Bounds" Kind="InputPin" DefaultValue="-373, -1448, 2576, 1456" IsHidden="true" />
+            <Pin Id="U1gu137sbVSOIjumZ9BlhA" Name="Node Context" Kind="InputPin" IsHidden="true" />
+            <Pin Id="EqIl8At1Z2gOIThSdSv4hN" Name="Bounds" Kind="InputPin" DefaultValue="-32000, -32000, 160, 28" IsHidden="true" />
             <Pin Id="VvoIO9TxITEQRvEJZuCead" Name="Save Bounds" Kind="InputPin" IsHidden="true" />
             <Pin Id="LDbmGcXRsLJOvonjSgCS9c" Name="Bound to Document" Kind="InputPin" IsHidden="true" />
-            <Pin Id="U1gu137sbVSOIjumZ9BlhA" Name="Node Context" Kind="InputPin" IsHidden="true" />
             <Pin Id="FNdiwyoJoPQQHltYKndF9P" Name="Dialog If Document Changed" Kind="InputPin" IsHidden="true" />
+            <Pin Id="GH9LVpQXjkdPgdJj3yYllI" Name="Always On Top" Kind="InputPin" IsHidden="true" />
+            <Pin Id="SqeoZ0Y6lReOlVHzPOxpPx" Name="Extend Into Title Bar" Kind="InputPin" IsHidden="true" />
             <Pin Id="GXwXfLUyykxPUhwTd5y4ir" Name="Input" Kind="InputPin" />
+            <Pin Id="EwPQcbczkUZOv3XCl5PrAE" Name="Title" Kind="InputPin" />
             <Pin Id="F4dxEXi0tahOLrsjlgsIK5" Name="Color" Kind="InputPin" />
             <Pin Id="BQm9UNr02fEOZjIM0FN8FA" Name="Clear" Kind="InputPin" />
             <Pin Id="A1ioJaugZtbLLJjyDkdCS1" Name="Space" Kind="InputPin" />
@@ -1406,7 +1414,7 @@
             <Pin Id="TR0T6Ybbn02MxfcloCCVrf" Name="VSync" Kind="InputPin" />
             <Pin Id="A1DyxvmRabWN6eQNX0D0Yv" Name="Commands" Kind="InputPin" IsHidden="true" />
             <Pin Id="Bd0AJEGd7AfM9xvmSV3cBA" Name="Enable Keyboard Shortcuts" Kind="InputPin" IsHidden="true" />
-            <Pin Id="G0X27srbyvBOjhprjcdgVG" Name="Enabled" Kind="InputPin" />
+            <Pin Id="G0X27srbyvBOjhprjcdgVG" Name="Enabled" Kind="InputPin" DefaultValue="True" />
             <Pin Id="DdDJ7z0AHQnMQGgD75tjOz" Name="Form Bounds Notifications" Kind="OutputPin" IsHidden="true" />
             <Pin Id="L19YTSoAvGVPe3sL9y5r1o" Name="Form" Kind="OutputPin" />
             <Pin Id="KTNorW7gvLrQA5oP9yKXqd" Name="ClientBounds" Kind="OutputPin" />
@@ -1435,6 +1443,7 @@
             <Pin Id="LAsaD7F3OVBMVQMMyrzQsz" Name="Name" Kind="InputPin" DefaultValue="Regular" />
             <Pin Id="UHQBxMGRPMHMGsKSYkeWgT" Name="Glyph Range" Kind="InputPin" />
             <Pin Id="PooszH1NntFLn8AIzValYY" Name="Output" Kind="OutputPin" />
+            <Pin Id="OswLtEQAN5BMMyBm0GsPzi" Name="Custom Glypth Range" Kind="InputPin" />
           </Node>
           <Node Bounds="2463,1182,105,19" Id="G9Chsf9Tj9lO6k9dVPmdAP">
             <p:NodeReference LastCategoryFullName="ImGui.Styling" LastDependency="VL.ImGui.vl">
@@ -1448,6 +1457,7 @@
             <Pin Id="Fx3aN3wPeH9Lbcm421mftj" Name="Name" Kind="InputPin" DefaultValue="MonoBig" />
             <Pin Id="FG410xfA81vO6OYyiFcJZ6" Name="Glyph Range" Kind="InputPin" />
             <Pin Id="IvDv9XCTfJ7OQyApJ6daGi" Name="Output" Kind="OutputPin" />
+            <Pin Id="DhUHFGhaxFGNxJAjq5CsaJ" Name="Custom Glypth Range" Kind="InputPin" />
           </Node>
           <Node Bounds="2495,1239,105,19" Id="QJvMn7vSeplQF0tnS0Mvom">
             <p:NodeReference LastCategoryFullName="ImGui.Styling" LastDependency="VL.ImGui.vl">
@@ -1461,7 +1471,9 @@
             <Pin Id="Q1ZJR2XJ8EzOSJVYSFpdkW" Name="Name" Kind="InputPin" DefaultValue="Monospace" />
             <Pin Id="RkbZHzyrxUFOVVbtHLJYbA" Name="Glyph Range" Kind="InputPin" />
             <Pin Id="PbU65DjtAGrPSog8ecrmBv" Name="Output" Kind="OutputPin" />
+            <Pin Id="MCs5uiKuxS4OT0bnXuAmxY" Name="Custom Glypth Range" Kind="InputPin" />
           </Node>
+          <Pad Id="PAq3pQFmz0GMZIKPSWsc8Z" Comment="Id To Bomb" Bounds="537,590,190,132" ShowValueBox="true" isIOBox="true" />
         </Canvas>
         <Patch Id="R8lasZRTdazMsrzItWD1dB" Name="Create" ParticipatingElements="QOQJPbtVLdUL5UxSFAMKQm" />
         <Patch Id="AvZ7dwfn0pVPBKOrhW94qf" Name="Update" />
@@ -1658,12 +1670,13 @@
         <Link Id="D1xt5GWf6YoPfaBWL2Nchc" Ids="LCPdFnZjJLlOObWHcKw6IE,GlLggAUe3EmNBfchxOV8KQ" />
         <Link Id="HAm6hTnRhcwODXBL7GaHTD" Ids="SJqPGt8JWdRLWtsBrYzA1m,PLgOKhg2WZqPCzzt0k3Ym7" />
         <Link Id="R8P6SbuxDoUM2TfLRYmm9V" Ids="PLgOKhg2WZqPCzzt0k3Ym7,SfdgQPGO5R0Nm0DHU2KqMf" />
+        <Link Id="AEAIbtDSRFVPvEdl4SKZI9" Ids="HOCE2fKiYoMNdGcyBE5YOM,PAq3pQFmz0GMZIKPSWsc8Z" />
       </Patch>
     </Node>
   </Patch>
   <ProjectDependency Id="Flnc1sx8BqnOGshjrdBvVs" Location="./csharp/mainbrainUtils/mainbrainUtils.csproj" IsForward="true" />
   <PlatformDependency Id="JjzuQofCfD3PRqY4ZOEmBu" Location="./csharp/mainbrainUtils/lib/CoreOSC.dll" />
-  <NugetDependency Id="JaUlhBXSfR0MtGUApzU3DT" Location="VL.Skia" Version="2024.6.7" />
-  <NugetDependency Id="DRwoYg6uknSNDFwI2wR1nB" Location="VL.ImGui" Version="2024.6.7" />
-  <NugetDependency Id="PJw1pTRemVVNBIFXigeQI1" Location="VL.ImGui.Skia" Version="2024.6.7" />
+  <NugetDependency Id="JaUlhBXSfR0MtGUApzU3DT" Location="VL.Skia" Version="2025.7.0" />
+  <NugetDependency Id="DRwoYg6uknSNDFwI2wR1nB" Location="VL.ImGui" Version="2025.7.0" />
+  <NugetDependency Id="PJw1pTRemVVNBIFXigeQI1" Location="VL.ImGui.Skia" Version="2025.7.0" />
 </Document>
