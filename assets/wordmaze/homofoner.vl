@@ -2237,7 +2237,7 @@ sa du</Item>
               </Item>
             </p:Value>
           </Pad>
-          <Pad Id="E4FJnuylYnBNoS3tN01V7P" Comment="" Bounds="186,1759,99,87" ShowValueBox="true" isIOBox="true" />
+          <Pad Id="E4FJnuylYnBNoS3tN01V7P" Comment="" Bounds="186,1759,102,87" ShowValueBox="true" isIOBox="true" />
           <Pad Id="FHPsSL7fJZ9OAtFnBtdVRl" Bounds="-318,485,172,379" ShowValueBox="true" isIOBox="true">
             <p:TypeAnnotation LastCategoryFullName="Collections" LastDependency="VL.CoreLib.vl">
               <Choice Kind="TypeFlag" Name="Spread" />
@@ -2263,19 +2263,19 @@ sa du</Item>
                 <Item>tvärtom</Item>
               </Item>
               <Item>
-                <Item>inget</Item>
+                <Item>sakta</Item>
               </Item>
               <Item>
                 <Item>bakåt</Item>
               </Item>
               <Item>
-                <Item>vänta</Item>
+                <Item>lägg av</Item>
               </Item>
             </p:Value>
           </Pad>
           <Pad Id="QATqL7pduCGLwNhlwVGteL" Comment="" Bounds="-24,1793,119,293" ShowValueBox="true" isIOBox="true" />
-          <Pad Id="LbVPDubglreMf3aNyJUShw" Comment="" Bounds="377,1854,106,293" ShowValueBox="true" isIOBox="true" />
-          <Pad Id="OyqF467uV7oQGJ8WCAwqVw" Comment="" Bounds="533,1735,166,293" ShowValueBox="true" isIOBox="true" />
+          <Pad Id="LbVPDubglreMf3aNyJUShw" Comment="" Bounds="377,1854,109,293" ShowValueBox="true" isIOBox="true" />
+          <Pad Id="OyqF467uV7oQGJ8WCAwqVw" Comment="" Bounds="533,1735,169,293" ShowValueBox="true" isIOBox="true" />
           <Pad Id="NQqdZ6oPxpIN2sHb5llMsl" Bounds="-495,993,35,95" ShowValueBox="true" isIOBox="true" Value="0, 0, 0, 0">
             <p:TypeAnnotation LastCategoryFullName="Collections" LastDependency="VL.CoreLib.vl">
               <Choice Kind="ImmutableTypeFlag" Name="Spread" />
@@ -2485,7 +2485,7 @@ sa du</Item>
               <p:buttonmode p:Assembly="VL.UI.Forms" p:Type="VL.HDE.PatchEditor.Editors.ButtonModeEnum">Bang</p:buttonmode>
             </p:ValueBoxSettings>
           </Pad>
-          <Pad Id="HOvtZv71Pp0NGDVTVt4SmI" Comment="" Bounds="-336,1953,106,354" ShowValueBox="true" isIOBox="true" />
+          <Pad Id="HOvtZv71Pp0NGDVTVt4SmI" Comment="" Bounds="-336,1953,109,382" ShowValueBox="true" isIOBox="true" />
           <Node Bounds="-301,1867,34,19" Id="L8sAts10NCiMFXdcVvvMVE">
             <p:NodeReference LastCategoryFullName="Primitive.String" LastDependency="VL.CoreLib.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
@@ -2917,13 +2917,13 @@ sa du</Item>
         <Link Id="FHl1sDcrl6YM8qBaQQLMxL" Ids="PLiyvSUX97HLkUUhBqxuq1,FnFvOC6B5pgMtVZQrIrBgI" />
         <Link Id="LU6aB6SeCU4QLjC2SagxlD" Ids="FnFvOC6B5pgMtVZQrIrBgI,CVjRWwQnA7uPZdKylUbrE7" />
         <Link Id="JF9vcyrdLdUNJT5QgMbkdP" Ids="H4b31gjY0ueLK1P5Ay2j7L,Gkglk0zcDxPLYHr4Xrrt1r" />
-        <Link Id="O7uLxGSy5smQDnQYHND28K" Ids="T52gxaJYkcfMQaA73jTrWx,Mnjmfx4rclXPsRTHBuCd4S" />
         <Link Id="DzOBWlickU7PFskNMbvO0Y" Ids="I15tokWzXAmQFYbKHqGtuZ,OqQ4UoUwswzN0IO8qeJiPQ" />
         <Link Id="CukSTs8cKYqOn2yMZFHwd5" Ids="UjHVASj1lpCQdfOR1AD7sr,I15tokWzXAmQFYbKHqGtuZ" />
         <Link Id="MBcWnUFrzd8LbiQhaQmC9h" Ids="Re4By7H5bW8O14f1fOmKj2,CyMuRRTLaYdMS42M49N3FP" />
         <Link Id="Lmtyskbt7KhPZ4Gk4SLPFw" Ids="H35FT7HYuISPX1KvANhbG2,JqEP2m0bLvXMN0eoqqHVyX" />
         <Link Id="LpDWWShQw4mOs0iViIYuKA" Ids="NZ0tbDGEuWZNf1jVwpTrfd,LbmCqmwtmiaPLfvmHssjIE" />
         <Link Id="JyMlYo6gAyEOSN5HLhU0RH" Ids="Cjcn4Foog0TL2LgR4l9Kfq,RTiOQL77gqiMqCWF5qrXnD" />
+        <Link Id="VZrhfp6EHCKOefBMM0jSTH" Ids="A484a8XjApDPCM3rhRP0hX,Mnjmfx4rclXPsRTHBuCd4S" />
       </Patch>
     </Node>
   </Patch>

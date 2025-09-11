@@ -24,7 +24,7 @@ public class WordMaze : BombModule
     public WordMaze(Random rng)
     {
 
-        string mazeSrc = "de,dem,dom,,vänta,,,,vad\r\nsa du,,,va,,fel,,nej,,tvärtom,,,inget,börja om,,,inget,,,,,sig,säg,sej,,,bakåt,,,stop,,stopp,vänta,,,,,skäl,själ,stjäl,,,höger,vänster,jord,,hjord,gjord,åter,,,ja,sett,,sätt,set";
+        string mazeSrc = ",vänta,,,,,tvärtom,,,vad\r\nsa du,,va,,fel,nej,,,inget,börja om,,stop,,stopp,,,de,dem,dom,sig,säg,sej,,,höger,vänster,,,sakta,,,skäl,själ,stjäl,,,bakåt,,,jord,,hjord,gjord,,,åter,ja,sett,sätt,,set,,,lägg av,";
         maze = mazeSrc.Split(',');
 
 

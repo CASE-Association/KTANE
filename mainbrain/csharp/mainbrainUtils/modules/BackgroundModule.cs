@@ -58,7 +58,7 @@ public class BackgroundModule: BombModule
 
     public override void OnBombDefused(Bomb bomb)
     {
-        bomb.BlinkLights([255, 255, 255], [[1.0f, 0.0f]], "/fx/lights/override", 0.004f, 10);
+        bomb.BlinkLights([255, 255, 255], [[1.0f, 0.0f]], "/fx/lights/override", 0.002f, 10);
         bomb.QueueMessage(new CoreOSC.OscMessage(new CoreOSC.Address("/fx/audio/bombdefused")));
         bomb.QueueMessage(new CoreOSC.OscMessage(new CoreOSC.Address("/fx/audio/postgame_happy"), [new CoreOSC.OscTrue()]));
     }
@@ -74,16 +74,16 @@ public class BackgroundModule: BombModule
     {
         bomb.BlinkLights([0, 0, 255],
             [
-            [1.0f, 62.0f], [0.0f, 63.0f],
-            [1.0f, 62.0f], [0.0f, 63.0f],
-            [1.0f, 62.0f], [0.0f, 63.0f],
-            [1.0f, 62.0f], [0.0f, 63.0f]], "/fx/lights/override", 1.0f, 10);
+            [1.0f, 62.0f], [0.01f, 63.0f],
+            [1.0f, 62.0f], [0.01f, 63.0f],
+            [1.0f, 62.0f], [0.01f, 63.0f],
+            [1.0f, 62.0f], [0.01f, 63.0f]], "/fx/lights/override", 1.0f, 10);
         await Task.Delay(875);
         List<float[]> seq = new List<float[]>();
         for(float v = 1.0f; v >= 0.0f; v -= 0.01f)
         {
             seq.Add(new float[] { v, 70.0f });
-            seq.Add(new float[] { 0.0f, 70.0f });
+            seq.Add(new float[] { 0.01f, 70.0f });
         }
         bomb.BlinkLights([255, 0, 0], seq.ToArray(), "/fx/lights/override", 1.0f, 10);
     }

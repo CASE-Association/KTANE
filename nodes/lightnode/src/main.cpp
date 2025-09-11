@@ -21,8 +21,8 @@ IPAddress targetIp = IPAddress(192, 168, 1, 223); // does not matter
 WiFiUDP udp;
 
 char* recvbuf = new char[8192];
-;
-#define LED_PIN 17
+
+#define LED_PIN 25
 #define NUM_LEDS 300
 CRGB leds[NUM_LEDS];
 
@@ -43,8 +43,6 @@ void setup() {
     leds[i] = CRGB::Green * (i%2);
   }
   FastLED.show();
-
-  delay(5000);
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
@@ -124,8 +122,8 @@ bool overridden = false;
 
 void LEDAnim(){
   for(int i = 0; i < NUM_LEDS; i++) {
-    int val = (int)((sin((float)i/30.0f + (float)millis()/1000.0f) / 2.0f + 0.5f) * 100.0f);
-    leds[i] = CRGB(val, val / 3, 0);
+    int val = (int)((sin((float)i/30.0f + (float)millis()/4000.0f) / 2.0f + 0.5f) * 10.0f);
+    leds[i] = CRGB(val, 0, 0);
   }
   FastLED.show();
 }
@@ -163,9 +161,9 @@ void loop() {
     {
       msgrecv.fill(udp.read());
     }
-    Serial.print("Received: '");
-    Serial.print(msgrecv.getAddress());
-    Serial.println("'");
+    // Serial.print("Received: '");
+    // Serial.print(msgrecv.getAddress());
+    // Serial.println("'");
 
     handleOSCMessage(msgrecv);
     
@@ -174,8 +172,6 @@ void loop() {
   if(!overridden){
     LEDAnim();
   }
-  
-  delay(30);
 }
 
 
