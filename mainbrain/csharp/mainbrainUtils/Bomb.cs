@@ -226,6 +226,9 @@ public class Bomb
     /// </summary>
     /// <param name="colour">3 int array containing the colour to blink.</param>
     /// <param name="sequence">A list of steps. Each step has two floats: one for brightness, one for step length</param>
+    /// <param name="address">The OSC address to send the light messages to</param>
+    /// <param name="fadeSpeed">How fast to fade out after the sequence is done, in 1/256ths of max brightness per second </param>
+    /// <param name="priority">If called with a higher priority than the current blink sequence, it will stop that sequence and start this instead. If lower than currently running, it will not start.</param>
     /// <param name="bomb"></param>
     /// <returns></returns>
     public async Task BlinkLights(int[] colour, float[][] sequence, string address, float fadeSpeed, int priority)
