@@ -45,6 +45,7 @@ public class BombConnectionManager
     OscMessageConverter converter = new();
 
     Stopwatch sw = Stopwatch.StartNew();
+    long lastMillis;
 
     IPEndPoint any = new(IPAddress.Any, 4444);
 
@@ -54,13 +55,20 @@ public class BombConnectionManager
     {
         receiver = new UdpClient(new IPEndPoint(new IPAddress([0,0,0,0]), 4000));
         sender = new UdpClient();
+        lastMillis = sw.ElapsedMilliseconds;
     }
 
 
     public void Update() // Called by VVVV
     {
-        float delta = ((float)sw.ElapsedMilliseconds / 1000.0f);
-        sw.Restart();
+        // float delta = ((float)sw.ElapsedMilliseconds / 1000.0f);
+        // sw.Restart();
+
+        long millisNow = sw.ElapsedMilliseconds;
+        float delta = (millisNow - lastMillis) / 1000.0f;
+        lastMillis = millisNow;
+
+        
 
         while (receiver.Available > 0)
         {
